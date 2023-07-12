@@ -1,0 +1,49 @@
+<div class="row">
+	<div class="col-lg-5" id="image_esr">
+
+    </div>
+    <div class="col-lg-7" id="contenu_esr">
+      
+    </div>        
+</div>
+<script>
+
+
+function getcurrentpage(){
+
+	if(typeof(currentEsrId) != "undefined")
+		{
+			urltmp="{{url('getopeningesrpage',{'esrid':'_esrid'})}}";
+		    url2=urltmp.replace('_esrid',currentEsrId);
+		}
+	else
+    	url2="{{url('getopeningesrpage')}}";
+
+		 $.ajax({
+	       url: url2,
+	       type: 'GET',
+	       dataType : 'json',
+	       
+	       success: function(datas){
+	               console.log(datas);
+	               loadesr('image_esr',datas.openingimagepage);
+	               loadesr('contenu_esr',datas.openingpage);
+
+	           }
+	           
+	       });
+
+}
+
+
+$(document).ready(function() {
+
+	
+	//urlimg="{{url('getpageesr',{idesr:"0",typepage:"getimgdeclarant"})}}";
+	//loadesr('image_esr',urlimg);
+
+	//getcurrentpage();
+	});
+
+
+</script>

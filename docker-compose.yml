@@ -1,0 +1,93 @@
+version: "3.7"
+services:
+  easydose:
+    build: .
+    container_name: "easydose"
+    image: easydose:latest
+    restart: unless-stopped
+    tty: true
+    hostname: easydose
+    environment:
+      TZ: "Indian/Reunion"
+    ports:
+      - 80:80
+    privileged: true
+    links:
+      - mysql
+    networks:
+      - default
+
+  dicomserver:
+    build:
+      context: .
+      dockerfile: dicomserverDockerFile
+    container_name: "dicomserver"
+    image: dicomserver:latest
+    restart: unless-stopped
+    tty: true
+    hostname: dicomserver
+    environment:
+      TZ: "Indian/Reunion"
+    ports:
+      - 11112:11112
+    privileged: true
+    links:
+      - mysql
+      - easydose
+    networks:
+      - default
+
+  sshserver:
+    build:
+      context: .
+      dockerfile: sshserverDockerfile
+    container_name: "sshserver"
+    image: sshserver:latest
+    restart: unless-stopped
+    tty: true
+    hostname: sshserver
+    environment:
+      TZ: "Indian/Reunion"
+    ports:
+      - 11142:22
+    privileged: true
+    links:
+      - mysql
+    networks:
+      - default
+    volumes:
+            - type: bind
+              source: C:/Users/sebastien.girier/Projets/easydose/sshserver
+              target: /home/dicomserver/.ssh
+            - type: bind
+              source: C:/Users/sebastien.girier/Projets/easydose/import
+              target: /home/dicomserver/import
+            - type: bind
+              source: C:/Users/sebastien.girier/Projets/easydose/export
+              target: /home/dicomserver/export
+
+  mysql:
+    image: mysql:5.7.41-debian
+    container_name: "bddmysql"
+    restart: unless-stopped
+    tty: true
+    hostname: bddmysql
+    environment:
+      TZ: "Indian/Reunion"
+      MYSQL_ROOT_PASSWORD: Boss132
+      MYSQL_DATABASE: 'easydose'
+      MYSQL_TCP_PORT: 3307
+    privileged: true
+    ports:
+      - '3307:3307'
+    expose:
+      - '3307'
+    networks:
+      - default
+    volumes:
+            - type: bind
+              source: C:/Users/sebastien.girier/Projets/easydose/data
+              target: /var/lib/mysql
+            - type: bind
+              source: C:/Users/sebastien.girier/Projets/easydose/sql
+              target: /sql

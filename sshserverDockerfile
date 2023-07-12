@@ -1,0 +1,66 @@
+#
+# NOTE: THIS DOCKERFILE IS GENERATED VIA "apply-templates.sh"
+#
+# PLEASE DO NOT EDIT IT DIRECTLY.
+#
+
+FROM python:3
+
+RUN python3 --version
+#RUN apt-get update
+# https://github.com/pypa/get-pip
+ENV PYTHON_GET_PIP_URL https://github.com/pypa/get-pip/raw/d5cb0afaf23b8520f1bbcfed521017b4a95f5c01/public/get-pip.py
+ENV PYTHON_GET_PIP_SHA256 394be00f13fa1b9aaa47e911bdb59a09c3b2986472130f30aa0bfaf7f3980637
+
+RUN set -eux; \
+	\
+	wget -O get-pip.py "$PYTHON_GET_PIP_URL"; \
+	echo "$PYTHON_GET_PIP_SHA256 *get-pip.py" | sha256sum -c -; \
+	\
+	export PYTHONDONTWRITEBYTECODE=1; \
+	\
+	python get-pip.py \
+		--disable-pip-version-check \
+		--no-cache-dir \
+		--no-compile \
+		"pip==$PYTHON_PIP_VERSION" \
+		"setuptools==$PYTHON_SETUPTOOLS_VERSION" \
+	; \
+	rm -f get-pip.py; \
+	\
+	pip --version
+
+CMD ["python3"]
+RUN mkdir /home/dicomserver
+RUN mkdir /home/dicomserver/logs
+RUN mkdir /home/dicomserver/save
+RUN mkdir /home/dicomserver/export
+RUN mkdir /home/dicomserver/import
+COPY ./ServeurDICOM/SCPSRV/exec/easyscpserver/model/ /home/dicomserver
+COPY ENV/DEV/easydose.cfg /home/dicomserver/Config
+RUN pip install --upgrade pip
+RUN pip install requests
+RUN pip install pynetdicom
+RUN pip install sqlobject
+RUN pip install mysql
+RUN pip install mysql-connector-python
+RUN pip install numpy
+RUN pip install pyconvert
+
+#RUN apt-get install openssh-server
+RUN apt-get clean
+RUN apt-get update
+RUN apt-get install openssh-server -y supervisor    
+RUN useradd -rm -d /home/dicomserver -s /bin/bash -g root -G sudo -u 1000 dicomserver 
+RUN  echo 'dicomserver:dicomserver' | chpasswd
+COPY sshd_config /etc/ssh/
+RUN mkdir /home/dicomserver/.ssh
+RUN chmod -R 600 /home/dicomserver/.ssh
+RUN chmod 700 /home/dicomserver/.ssh
+RUN chmod 777 /home/dicomserver/Entity/sendfile.sh
+RUN chown dicomserver:root -R /home/dicomserver
+RUN service ssh start
+EXPOSE 22
+CMD ["/usr/sbin/sshd","-D"]
+#COPY dockerdicom-entrypoint.sh /usr/local/bin/
+#ENTRYPOINT ["dockerdicom-entrypoint.sh"]

@@ -1,0 +1,37 @@
+{% set  urlimgdeclarant= url('getpageesr',{idesr:"0",typepage:"getimgdeclarant"})%}
+{% set  urldeclarant= url('getpageesr',{idesr:"0",typepage:"getdeclarant"})%}
+
+{% set  urlimgevent1= url('getpageesr',{idesr:"0",typepage:"getimgevent1"})%}
+{% set  urlevent1= url('getpageesr',{idesr:"0",typepage:"getevent1"})%}
+
+
+
+{% set  urlimgevent2= url('getpageesr',{idesr:"0",typepage:"getimgevent2"})%}
+{% set  urlevent2= url('getpageesr',{idesr:"0",typepage:"getevent2"})%}
+
+
+{% set  urlimgconsequences= url('getpageesr',{idesr:"0",typepage:"getimgconsequences"})%}
+{% set  urlconsequences= url('getpageesr',{idesr:"0",typepage:"getconsequences"})%}
+
+
+{% set  urlimgmesures= url('getpageesr',{idesr:"0",typepage:"getimgmesures"})%}
+{% set  urlmesures= url('getpageesr',{idesr:"0",typepage:"getmesures"})%}
+
+{% set  urlimgfin= url('getpageesr',{idesr:"0",typepage:"getimgfin"})%}
+{% set  urlfin= url('getpageesr',{idesr:"0",typepage:"getfin"})%}
+
+
+ <div class="row mb-5 mt-4">
+      <div class="col-lg-12">
+        <ul class="withoutpoint" id="breadcrumbs-two">
+            <li><a id="declarant" class="filearianne current" onclick="loadpageesr('{{ urlimgdeclarant }}','{{ urldeclarant }}','declarant');">Déclarant</a></li>
+            <li><a id="event1" class="filearianne" onclick="loadpageesr('{{ urlimgevent1 }}','{{ urlevent1 }}','event1');" >Description de L'évènement.1</a></li>
+            <li><a id="event2" class="filearianne" onclick="loadpageesr('{{ urlimgevent2 }}','{{ urlevent2 }}','event2');" >Description de L'évènement.2</a></li>
+            <li><a id="consequences" class="filearianne" onclick="loadpageesr('{{ urlimgconsequences }}','{{ urlconsequences }}','consequences');" >Conséquences</a></li>
+            <li><a id="mesures" class="filearianne" onclick="loadpageesr('{{ urlimgmesures }}','{{ urlmesures }}','mesures');" >Mesures conservatoires</a></li>
+            <li><a id="fin" class="filearianne" onclick="loadpageesr('{{ urlimgfin }}','{{ urlfin }}','fin');">Fin</a></li>
+          </ul>
+       </div>
+      </div>      
+
+      
