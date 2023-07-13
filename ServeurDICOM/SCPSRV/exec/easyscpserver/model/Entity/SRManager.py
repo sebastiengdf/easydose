@@ -301,7 +301,7 @@ class SRManager(DICOMDbManager):
                                         protocoleall=   "%s - %s" %(protocoleall,_protocole)
                                     else:
                                         protocoleall=   _protocole                         
-                                DetailDose(uniteseuil=" ",nrdvaleur=0,sumhavealerte=0,nrdhavealerte=0,unitexrayTubeContent=_xraytubecourrantuynite,modalite=self.manageDCMData.modalite,date=self.manageDCMData.dateexamen,machine=_machine,protocole=str(_protocole.encode('utf-8')),unite=_unite,body_part_easydose=easydosebodyparts,valeur=float(self._valeur),kvp=float(self._kvp), tempsExposition=float(self._tempsexposition), xrayTubeContent=int(self._xraytubecourrant), dose=myDose, bodyPart=self._region)
+                                DetailDose(uniteseuil=" ",nrdvaleur=0,sumhavealerte=0,nrdhavealerte=0,unitexrayTubeContent=_xraytubecourrantuynite,modalite=self.manageDCMData.modalite,date=self.manageDCMData.dateexamen,machine=_machine,protocole=_protocole.encode('utf-8').decode('utf-8'),unite=_unite,body_part_easydose=easydosebodyparts,valeur=float(self._valeur),kvp=float(self._kvp), tempsExposition=float(self._tempsexposition), xrayTubeContent=int(self._xraytubecourrant), dose=myDose, bodyPart=self._region)
             
             
             if procedureName =="Computed Tomography X-Ray":
@@ -350,8 +350,8 @@ class SRManager(DICOMDbManager):
                                         protocoleall =   "%s - %s" %(protocoleall,_protocole)
                                     else:
                                         protocoleall =   _protocole                         
-                                DetailDose(uniteseuil=" ",nrdvaleur=0,sumhavealerte=0,nrdhavealerte=0,unitexrayTubeContent=_xraytubecourrantuynite,modalite=self.manageDCMData.modalite,date=self.manageDCMData.dateexamen,machine=_machine,unite=_unite,protocole=str(_protocole.encode('utf-8')),body_part_easydose=easydosebodyparts,valeur=float(self._valeur),kvp=float(self._kvp), tempsExposition=float(self._tempsexposition), xrayTubeContent=int(self._xraytubecourrant), dose=myDose, bodyPart=self._region)
-            myDose.protocole=str(protocoleall.encode('utf-8'))
+                                DetailDose(uniteseuil=" ",nrdvaleur=0,sumhavealerte=0,nrdhavealerte=0,unitexrayTubeContent=_xraytubecourrantuynite,modalite=self.manageDCMData.modalite,date=self.manageDCMData.dateexamen,machine=_machine,unite=_unite,protocole=_protocole.encode('utf-8').decode('utf-8'),body_part_easydose=easydosebodyparts,valeur=float(self._valeur),kvp=float(self._kvp), tempsExposition=float(self._tempsexposition), xrayTubeContent=int(self._xraytubecourrant), dose=myDose, bodyPart=self._region)
+            myDose.protocole=protocoleall.encode('utf-8').decode('utf-8')
                  
             myPatient=self.managePatient()
             self.loggin.warning("Patient Enregistre")        

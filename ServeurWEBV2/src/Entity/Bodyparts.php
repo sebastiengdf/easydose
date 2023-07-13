@@ -5,13 +5,13 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Core\Annotation\ApiResource;
 
-// /**
-// * Bodyparts
-// * @ApiResource(
-// *     collectionOperations={"get"},
-// *     itemOperations={"get", "put", "delete"}
-// * )
  /**
+ * Bodyparts
+ * @ApiResource(
+ *     collectionOperations={"get"},
+ *     itemOperations={"get", "put", "delete"}
+ * )
+ **
  * @ORM\Table(name="bodyparts")
  * @ORM\Entity
  */

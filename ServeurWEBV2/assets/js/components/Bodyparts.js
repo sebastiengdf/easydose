@@ -14,7 +14,7 @@ class Bodyparts extends Component {
     }
     
     getBodyparts() {
-       axios.get(`http://localhost:81/api/bodyparts?page=1`).then(bodyparts => {
+       axios.get(`http://localhost:81/api/bodyparts`).then(bodyparts => {
            this.setState({ bodyparts: bodyparts.data, loading: false})
        })
     }

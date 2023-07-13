@@ -23,7 +23,7 @@ class Home extends Component {
                
 			
                <Routes>
-                   <Route path="/bodyparts" element={<Bodyparts/>} />
+                   <Route path="/api/bodyparts" element={<Bodyparts/>} />
                </Routes>
             
            </div>
