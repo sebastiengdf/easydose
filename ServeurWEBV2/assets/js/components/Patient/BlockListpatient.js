@@ -18,7 +18,6 @@ class BlockListpatient extends Component {
                         ) : (
                             <div className={'row   mx-1 overflow-auto  h-50'}>
                                 { 
-                                console.log(this.props.patients['hydra:member']) ,
                                 this.props.patients['hydra:member'].map(patient =>
                                     <PatientCard patient={patient} />
                                 )}

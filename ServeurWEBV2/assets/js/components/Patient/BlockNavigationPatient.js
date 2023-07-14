@@ -6,17 +6,27 @@ class BlockNavigationPatient extends Component {
     constructor() {
         super();
     } 
-    render() {
+    render() {        
         return(
             <div className="row">
                 <div className="col-md-11">
                     <div style={{float:'right',marginTop:'5px'}} className="dataTables_paginate paging_simple_numbers">
-                    <ul className="pagination">
-                    <Bouton objectpatient={this.props.objectpatient} number={"Précedent"}/>
-                    <Bouton number={"1"}/>
-                    <Bouton number={"2"}/>....
-                    <Bouton number={"Suivant"}/>
-                    </ul>
+                    {
+                        this.props.loading ? (
+                            <div className={'row text-center'}>
+                                <span className="fa fa-spin fa-spinner fa-4x"></span>
+                            </div>
+                        ) : (  
+                        <ul className="pagination">
+                            <Bouton objectpatient={this.props.objectpatient} number={"Premier"} url={this.props.objectpatient.state.patients['hydra:view']["hydra:first"]}/>
+                            <Bouton objectpatient={this.props.objectpatient} number={"Précedent"} url={this.props.objectpatient.state.patients['hydra:view']["hydra:previous"]}/>
+                            <Bouton objectpatient={this.props.objectpatient} number={"Suivant"} url={this.props.objectpatient.state.patients['hydra:view']["hydra:next"]}/>....
+                            <Bouton objectpatient={this.props.objectpatient} number={"Dernier"} url={this.props.objectpatient.state.patients['hydra:view']["hydra:last"]}/>
+                        </ul>
+                        
+                            )}
+
+
                 </div>
                 <div className="col-md-1">
 

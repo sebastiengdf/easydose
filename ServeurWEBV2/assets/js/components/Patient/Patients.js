@@ -11,11 +11,11 @@ class Patients extends Component {
     }
     
     componentDidMount() {
-        this.getPatients(1);
+        this.getPatients("/api/patients?page=1");
     }
     
     getPatients(page) {
-        axios.get(`http://localhost:81/api/patients?page=`+page).then(patients => {
+        axios.get(`http://localhost:81`+page).then(patients => {
            this.setState({ patients: patients.data, loading: false})
        })
     }
@@ -24,7 +24,7 @@ class Patients extends Component {
         const loading = this.state.loading;
         return(
                 <div>
-                    <BlockNavigationPatient objectpatient={this} patients={this.state.patients} />
+                    <BlockNavigationPatient objectpatient={this} loading={loading} />
                     <BlockListpatient patients={this.state.patients} loading={loading}/>
                 </div>
         )
