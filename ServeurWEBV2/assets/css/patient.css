@@ -54,7 +54,7 @@ body {
 	height: 0;
 	border-style: solid;
 	border-width: 0 100px 100px 0;
-	border-color: transparent #CC0000 transparent transparent;
+	border-color: transparent #286b95 transparent transparent;
 }
 .rightcornerwoman{
 	width: 0;
@@ -62,6 +62,13 @@ body {
 	border-style: solid;
 	border-width: 0 100px 100px 0;
 	border-color: transparent #bb239a transparent transparent;
+}
+.rightcornerpedia{
+	width: 0;
+	height: 0;
+	border-style: solid;
+	border-width: 0 100px 100px 0;
+	border-color: transparent #d8c217 transparent transparent;
 }
 .background{
 	

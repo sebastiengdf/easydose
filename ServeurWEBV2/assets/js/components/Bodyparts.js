@@ -24,7 +24,7 @@ class Bodyparts extends Component {
         return(
             <div>
                 <section className="row-section">
-                    <div className="flatcard">
+                    <div className="container">
                         <div className="row">
                             <h2 className="text-center"><span>List of Bodyparts</span>Created with <i
                                 className="fa fa-heart"></i> by sebgdf</h2>

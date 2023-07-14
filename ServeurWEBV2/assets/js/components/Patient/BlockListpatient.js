@@ -4,7 +4,6 @@ import PatientCard from './PatientCard';
 class BlockListpatient extends Component {
     constructor() {
         super();
-        //this.loading = _loading
     }
     render() {
         return(
