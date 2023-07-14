@@ -3,10 +3,17 @@ import React, {Component} from 'react';
 
 class PatientCard extends Component {
     render() {
+        if (this.props.patient.sex=="FEMME"){
+            this.classnamecorner="rightcornerwoman text-right background"
+            }
+        else{
+            this.classnamecorner="rightcornerauto text-right background"
+            }
         return (
             <div key={this.props.patient.id}>
                 <div className="card weather-card mb-4 mt-4 mr-2 ml-2 content2" style={{width:"18.5em",height: "30em"}}>
-                    <div className="rightcornerauto text-right background">
+                    
+                    <div className={this.classnamecorner}>
                     </div>
                         <div className="text-right backgroundtextmanuel font-weight-bold">
                             E.S.R. Auto
