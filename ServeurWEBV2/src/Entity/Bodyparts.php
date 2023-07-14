@@ -5,11 +5,14 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Core\Annotation\ApiResource;
 
- /**
+/**
  * Bodyparts
  * @ApiResource(
- *     collectionOperations={"get"},
- *     itemOperations={"get", "put", "delete"}
+ *     collectionOperations={"get","post"},
+ *     itemOperations={"get", "put", "delete"},
+ *     paginationEnabled=true,
+ *     paginationItemsPerPage= 10,
+ *     paginationClientPartial= true
  * )
  **
  * @ORM\Table(name="bodyparts")
