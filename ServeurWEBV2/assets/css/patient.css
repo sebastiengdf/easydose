@@ -34,3 +34,32 @@ body {
 .content2{
     position: relative;  
 }
+.backgroundtextmanuel{
+	color:white;
+    position: absolute;
+    top: 0;
+    left: 15.3em;
+    z-index: 2;
+}
+.rightcornermanuel{
+	width: 0;
+	height: 0;
+	border-style: solid;
+	border-width: 0 100px 100px 0;
+	border-color: transparent #007E33 transparent transparent;
+}
+
+.rightcornerauto{
+	width: 0;
+	height: 0;
+	border-style: solid;
+	border-width: 0 100px 100px 0;
+	border-color: transparent #CC0000 transparent transparent;
+}
+.background{
+	
+    position: absolute;
+    top: 0;
+    left: 12.4em;
+    z-index: 1;
+}

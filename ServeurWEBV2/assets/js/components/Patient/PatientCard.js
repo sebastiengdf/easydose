@@ -13,9 +13,12 @@ class PatientCard extends Component {
                         </div>	                       
                         <div className="card-body pb-1">                                                    
                             <div  className="d-flex flex-row">                                                        
-                                <h4>{this.props.patient.nom}</h4>
-                                <p>{this.props.patient.prenom}</p>                                                                
-                            </div> 
+                                <h4 className="card-title font-weight-bold  ">{this.props.patient.nom}</h4>
+                                                             
+                            </div>
+                            <div className="lead">
+                            {this.props.patient.prenom} 
+                            </div>
                         </div>
                     </div>
             </div>
