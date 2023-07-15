@@ -8,8 +8,7 @@ class BlockNavigationPatient extends Component {
     } 
     render() {        
         return(
-            <div className="row">
-                <div className="col-md-11">
+                      <div className="col-md-12">
                     <div style={{float:'right',marginTop:'5px'}} className="dataTables_paginate paging_simple_numbers">
                     {
                         this.props.loading ? (
@@ -28,10 +27,6 @@ class BlockNavigationPatient extends Component {
 
 
                 </div>
-                <div className="col-md-1">
-
-                </div>
-            </div>
             </div>
         )
         }       

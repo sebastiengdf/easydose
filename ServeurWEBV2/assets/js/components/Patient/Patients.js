@@ -23,7 +23,7 @@ class Patients extends Component {
     render() {
         const loading = this.state.loading;
         return(
-                <div>
+                <div className="row">
                     <BlockNavigationPatient objectpatient={this} loading={loading} />
                     <BlockListpatient patients={this.state.patients} loading={loading}/>
                 </div>
