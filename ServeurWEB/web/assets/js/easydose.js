@@ -334,12 +334,12 @@ function esr(url){
 function listepatientswhiteoutreinit(url){
 	
 	var url2=url.replace("_screenheigth", screen.height);
-	
+	/*
 	$('#maincontent').loading({
 		stoppable: true,
 	    message: 'Chargement...',
 	    theme: 'dark'
-	  });
+	  });*/
 	$('#maincontent').load(url2);
 
 	$('#tabledetailcontent').html("");
@@ -390,12 +390,12 @@ function delectepatientEpingle(id,url){
 function listepatients(url){
 	reinitfilter(url)
 	var url2=url.replace("_screenheigth", screen.height);
-	
+	/*
 	$('#maincontent').loading({
 		stoppable: true,
 	    message: 'Chargement...',
 	    theme: 'dark'
-	  });
+	  });*/
 	$('#maincontent').load(url2);
 
 	$('#tabledetailcontent').html("");

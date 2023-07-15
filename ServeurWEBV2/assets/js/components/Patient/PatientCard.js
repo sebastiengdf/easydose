@@ -32,7 +32,7 @@ class PatientCard extends Component {
     }
     setDosealerte(){
         if (this.props.patient.sumhavealerte)
-            this.doseclassName="red-text text-center font-weight-bold"
+            this.doseclassName="text-center font-weight-bold"
         else
             this.doseclassName="text-center font-weight-bold"
     }
@@ -101,9 +101,9 @@ class PatientCard extends Component {
 
                             <div className="text-center">
                                 <span className="waves-input-wrapper waves-effect waves-light">
-                                    <input style={{border:"2px solid rgb(56,107,255) !important",color:"rgb(56,107,255) !important"}} type="button" className="btn btn-outline-primary waves-effect" onclick="sendmailtoOne();" value="Consulter fiche patient">
+                                    <input style={{border:"2px solid rgb(56,107,255) !important",color:"rgb(56,107,255) !important"}} type="button" className="btn btn-outline-primary waves-effect" onClick={() => getinfopatient(this.props.patient.id,"http://localhost/patient/infopatient/idtoreplace","http://localhost/patient/tdpatient/idtoreplace")} value="Consulter fiche patient">
                                     </input>
-                                    </span>
+                                </span>
                             </div>
 
                         </div>
