@@ -3,7 +3,6 @@
 import React, {Component} from 'react';
 import axios from 'axios';
 import BlockListpatient from './BlockListpatient';
-import BlockNavigationPatient from './BlockNavigationPatient';
 class Patients extends Component {
     constructor() {
         super();
@@ -24,8 +23,7 @@ class Patients extends Component {
         const loading = this.state.loading;
         return(
                 <div className="row">
-                    <BlockNavigationPatient objectpatient={this} loading={loading} />
-                    <BlockListpatient patients={this.state.patients} loading={loading}/>
+                    <BlockListpatient objectpatient={this} loading={loading}/>
                 </div>
         )
     }
