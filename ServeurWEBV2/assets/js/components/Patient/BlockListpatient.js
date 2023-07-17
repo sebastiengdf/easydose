@@ -14,14 +14,14 @@ class BlockListpatient extends Component {
                 <div className="card-cascade card-cascade narrower">                    
                    <div className="flatcard">
                    <div className="row">
-                        <div className="col-md-12 ml-3 paddingrightcustom " style={{left:"-2px;"}}>
+                        <div className="col-md-12 ml-3 paddingrightcustom " style={{left:"-2px"}}>
                             <div className="row">
                                 <div className="col-md-10 onglet1a pr-0 mr-0 pt-1">Liste des patients </div> 
                                 <div className="pl-0 ml-0 col-md-2 onglet1b"> </div>                            
                             </div>
                         </div>
                     </div>
-                    <div clssName="row">
+                    <div className="row">
                         <BlockNavigationPatient objectpatient={this.props.objectpatient} loading={this.props.loading} />          
                     </div>
                         {this.props.loading ? (
@@ -32,7 +32,7 @@ class BlockListpatient extends Component {
                             <div className={'row   mx-1 overflow-auto  h-50'}>
                                 { 
                                 this.props.objectpatient.state.patients['hydra:member'].map(patient =>
-                                    <PatientCard patient={patient} />
+                                    <PatientCard patient={patient} offset={this.props.objectpatient.state.patients['hydra:view']["@id"]}/>
                                 )}
                             </div>
                         )}

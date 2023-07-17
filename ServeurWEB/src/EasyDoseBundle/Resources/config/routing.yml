@@ -303,7 +303,7 @@ worklistoffset:
   defaults: { _controller : EasyDoseBundle:Patient:worklistoffset }  
   
 worklistsearchFiltre:
-  path: /worklistsearchFiltre/{withradio}/{withscan}/{withmammo}/{withnrd}/{withpediatrie}/{withpatientproc}/{screenheigth}/{offset}
+  path: /worklistsearchFiltre/{withradio}/{withscan}/{withmammo}/{withnrd}/{withpediatrie}/{withpatientproc}/{offset}
   defaults: { _controller : EasyDoseBundle:Patient:worklistsearchFiltre }  
 
 worklistsearch:

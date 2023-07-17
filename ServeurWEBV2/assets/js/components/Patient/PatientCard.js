@@ -36,11 +36,16 @@ class PatientCard extends Component {
         else
             this.doseclassName="text-center font-weight-bold"
     }
+    seturlinfopatient(){
+        this.urlinfopatient="/patient/infopatient/idtoreplace?offset="+this.props.offset
+        this.urlinfotdpatient="/patient/tdpatient/idtoreplace"
+    }
     render() {
         this.setrightcorner()
         this.setcivilite()
         this.setNrdalerte()
         this.setDosealerte()
+        this.seturlinfopatient()
         return (
             <div key={this.props.patient.id}>
                 <div className="card weather-card mb-4 mt-4 mr-2 ml-2 content2" style={{width:"18.5em",height: "30em"}}>
@@ -101,7 +106,7 @@ class PatientCard extends Component {
 
                             <div className="text-center">
                                 <span className="waves-input-wrapper waves-effect waves-light">
-                                    <input style={{border:"2px solid rgb(56,107,255) !important",color:"rgb(56,107,255) !important"}} type="button" className="btn btn-outline-primary waves-effect" onClick={() => getinfopatient(this.props.patient.id,"http://localhost/patient/infopatient/idtoreplace","http://localhost/patient/tdpatient/idtoreplace")} value="Consulter fiche patient">
+                                    <input style={{border:"2px solid rgb(56,107,255) !important",color:"rgb(56,107,255) !important"}} type="button" className="btn btn-outline-primary waves-effect" onClick={() => getinfopatient(this.props.patient.id,this.urlinfopatient,this.urlinfotdpatient)} value="Consulter fiche patient">
                                     </input>
                                 </span>
                             </div>

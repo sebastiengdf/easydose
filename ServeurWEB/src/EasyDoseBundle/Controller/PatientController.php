@@ -2101,6 +2101,8 @@ class PatientController extends Controller
 	    ->getManager()
 	    ->find('AppBundle\Entity\Patient', $patientid);
 	    
+		
+
 	    $typepatient='default';
 	    $age=$this->get('utils')->calculage($patient)["age"];
 	    if($patient->getSex()=='FEMME' && $age>192 and age<599)
@@ -3945,7 +3947,7 @@ class PatientController extends Controller
 	}
 	
 	
-	public function infopatientAction($id){
+	public function infopatientAction(Request $request,$id){
 		$patient=$this->getDoctrine()
 		->getManager()
 		->find('AppBundle\Entity\Patient', $id);
@@ -3978,7 +3980,7 @@ class PatientController extends Controller
 		
 		
 		
-		
+		$offset=$request->request->get("offset");
 		
 		$examens=$this->getDoctrine()
 		->getManager()
@@ -4195,7 +4197,8 @@ class PatientController extends Controller
 				'cumul' => ($cumul==0)?0:sprintf("%.2e",$cumul),
 				'nbmax' => $nbmax,
 				'cumulmax' => $cumulmax,
-				'lastnote'=>$lastnote
+				'lastnote'=>$lastnote,
+				'offset'=>$offset
 	
 		]);
 	

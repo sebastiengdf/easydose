@@ -802,11 +802,11 @@ function openlastnotes2(idpatient){
 		}
 
 function getreturn(url1,url2) {
-	$('#maincontent').loading({
+	/*$('#maincontent').loading({
 		stoppable: true,
         message: 'Chargement...',
         theme: 'dark'
-      });
+      });*/
     url=url1;
     url2=url.replace("_screenheigth", screen.height);
 	$('#maincontent').load(url2);

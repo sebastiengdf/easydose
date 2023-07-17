@@ -9,9 +9,9 @@ use Symfony\Component\Routing\Annotation\Route;
 class DefaultController extends AbstractController
 {
     /**
-     * @Route("/default", name="app_default")
+     * @Route("/getpatients/{withradio}/{withscan}/{withmammo}/{withnrd}/{withpediatrie}/{withpatientproc}/{offset}", name="getpatients")
      */
-    public function index(): Response
+    public function getpatients($withradio,$withscan,$withmammo,$withnrd,$withpediatrie,$withpatientproc,$offset): Response
     {
         return $this->render('default/index.html.twig', [
             'controller_name' => 'DefaultController',

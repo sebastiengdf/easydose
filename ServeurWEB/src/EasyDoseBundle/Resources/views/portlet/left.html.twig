@@ -19,7 +19,7 @@
           </li>
           
           <li>
-           <a   onclick="listepatients('http://localhost/patient/worklistsearchFiltre');" class="collapsible-header waves-effect arrow-r"><i class="sv-slim-icon far fa-user"></i> Liste des Patients</a>
+           <a   onclick="listepatients('{{ url('worklistsearchFiltre',{'withradio':'false','withscan':'false','withmammo':'false','withnrd':'false','withpediatrie':'false','withpatientproc':'false',offset:"0"}) }}');" class="collapsible-header waves-effect arrow-r"><i class="sv-slim-icon far fa-user"></i> Liste des Patients</a>
           </li>
             
           
