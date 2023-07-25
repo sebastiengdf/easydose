@@ -21,15 +21,7 @@ body {
     background-color: lightgray;
 }
 
-.flatcard{
-	border-style: solid;
-	border-width: thin;
-	border-color: #d2d6de;
-	position: relative;
-	flex-direction: column;
-	display: flex;
-	background-color:rgb(252,254,255);
-}
+
 
 .content2{
     position: relative;  

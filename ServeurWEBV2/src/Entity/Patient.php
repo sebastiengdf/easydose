@@ -11,7 +11,8 @@ use ApiPlatform\Core\Annotation\ApiResource;
  *     itemOperations={"get", "put", "delete"},
  *     paginationEnabled=true,
  *     paginationItemsPerPage= 10,
- *     paginationClientPartial= true
+ *     paginationClientPartial= true, 
+ * 	   attributes={"order"={"datelastexam"="DESC"}}
  * )
  * @ORM\Table(name="patient")
  * @ORM\Entity

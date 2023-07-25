@@ -533,7 +533,7 @@ bottom: .5em;
 	position: relative;
 	flex-direction: column;
 	display: flex;
-	background-color:rgb(252,254,255);
+	background-color:rgb(235,235,235);
 }
 .onglet1b{
 	/*position:absolute;*/
