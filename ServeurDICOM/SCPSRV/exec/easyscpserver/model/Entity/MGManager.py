@@ -22,7 +22,7 @@ class MGManager(DICOMDbManager):
         Constructor
         '''
         super(MGManager, self).__init__(_manageDCMData,_loggin)
-        
+        self.type="MG"
     def insertInformation(self):
         '''
         Methode d'insertion des informations provenant des fichiers DICOM de type MG

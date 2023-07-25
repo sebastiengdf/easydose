@@ -23,7 +23,7 @@ class SRManager(DICOMDbManager):
         Constructor
         '''
         super(SRManager, self).__init__(_manageDCMData,_loggin)
-    
+        self.type="SR"
     
     def getDICOMAttribute(self,content,attributename,isnumericvalue):
         _val= None
@@ -303,7 +303,7 @@ class SRManager(DICOMDbManager):
                                         protocoleall=   _protocole                         
                                 DetailDose(uniteseuil=" ",nrdvaleur=0,sumhavealerte=0,nrdhavealerte=0,unitexrayTubeContent=_xraytubecourrantuynite,modalite=self.manageDCMData.modalite,date=self.manageDCMData.dateexamen,machine=_machine,protocole=_protocole.encode('utf-8').decode('utf-8'),unite=_unite,body_part_easydose=easydosebodyparts,valeur=float(self._valeur),kvp=float(self._kvp), tempsExposition=float(self._tempsexposition), xrayTubeContent=int(self._xraytubecourrant), dose=myDose, bodyPart=self._region)
             
-            
+            myPatient=self.managePatient()
             if procedureName =="Computed Tomography X-Ray":
                 if hasattr(self.manageDCMData.dose,'ContentSequence'): 
                     for content in self.manageDCMData.dose.ContentSequence:                                                                               
@@ -349,11 +349,15 @@ class SRManager(DICOMDbManager):
                                     if protocoleall != "":
                                         protocoleall =   "%s - %s" %(protocoleall,_protocole)
                                     else:
-                                        protocoleall =   _protocole                         
+                                        protocoleall =   _protocole 
+                                if '2' in _unite:
+                                    myPatient.haveradio=1
+                                else
+                                    myPatient.havescanner=1
                                 DetailDose(uniteseuil=" ",nrdvaleur=0,sumhavealerte=0,nrdhavealerte=0,unitexrayTubeContent=_xraytubecourrantuynite,modalite=self.manageDCMData.modalite,date=self.manageDCMData.dateexamen,machine=_machine,unite=_unite,protocole=_protocole.encode('utf-8').decode('utf-8'),body_part_easydose=easydosebodyparts,valeur=float(self._valeur),kvp=float(self._kvp), tempsExposition=float(self._tempsexposition), xrayTubeContent=int(self._xraytubecourrant), dose=myDose, bodyPart=self._region)
             myDose.protocole=protocoleall.encode('utf-8').decode('utf-8')
                  
-            myPatient=self.managePatient()
+            
             self.loggin.warning("Patient Enregistre")        
             self.loggin.warning("Enregistrement Region")
             myRegion = Region(nom='test', code='testCode')

@@ -3,10 +3,16 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-
+use ApiPlatform\Core\Annotation\ApiResource;
 /**
  * Examen
- *
+ * @ApiResource(
+ *     collectionOperations={"get"},
+ *     itemOperations={"get", "put", "delete"},
+ *     paginationEnabled=true,
+ *     paginationItemsPerPage= 10,
+ *     paginationClientPartial= true
+ * )
  * @ORM\Table(name="examen", indexes={@ORM\Index(name="IDX_514C8FECE26C09CA", columns={"salle_examen_id"}), @ORM\Index(name="IDX_514C8FEC6B899279", columns={"patient_id"}), @ORM\Index(name="IDX_514C8FEC98260155", columns={"region_id"})})
  * @ORM\Entity
  */
@@ -49,14 +55,12 @@ class Examen
      */
     private $manufacturer;
 
-    /**
-     * @var \Patient
-     *
-     * @ORM\ManyToOne(targetEntity="Patient")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="patient_id", referencedColumnName="id")
-     * })
-     */
+
+     /**
+     * @ORM\ManyToOne(targetEntity="Patient",inversedBy="examens")
+     * @ORM\JoinColumn(name="id", referencedColumnName="id", nullable=true)
+     * */
+    
     private $patient;
 
     /**
@@ -109,4 +113,40 @@ class Examen
      */
     private $seriesdescription;
 
+
+	/**
+	 * 
+	 * @return int
+	 */
+	public function getId() {
+		return $this->id;
+	}
+	
+	/**
+	 * 
+	 * @param int $id 
+	 * @return self
+	 */
+	public function setId($id): self {
+		$this->id = $id;
+		return $this;
+	}
+
+	/**
+	 * 
+	 * @return mixed
+	 */
+	public function getPatient() {
+		return $this->patient;
+	}
+	
+	/**
+	 * 
+	 * @param mixed $patient 
+	 * @return self
+	 */
+	public function setPatient($patient): self {
+		$this->patient = $patient;
+		return $this;
+	}
 }

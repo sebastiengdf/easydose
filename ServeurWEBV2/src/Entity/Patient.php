@@ -120,7 +120,34 @@ class Patient
     private $patientid;
 
 
+	 /**
+     * @var boolean
+     *
+     * @ORM\Column(name="havemammo", type="boolean")
+     */
+    private $havemammo;
+    
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="haveradio", type="boolean")
+     */
+    private $haveradio;
 
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="havescanner", type="boolean")
+     */
+    private $havescanner;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="datelastexam", type="datetime", nullable=true)
+     */
+    private $datelastexam;
+	
 	/**
 	 * 
 	 * @return int
@@ -370,6 +397,79 @@ class Patient
 	 */
 	public function setId($id): self {
 		$this->id = $id;
+		return $this;
+	}
+
+
+	/**
+	 * 
+	 * @return boolean
+	 */
+	public function getHavemammo() {
+		return $this->havemammo;
+	}
+	
+	/**
+	 * 
+	 * @param boolean $havemammo 
+	 * @return self
+	 */
+	public function setHavemammo($havemammo): self {
+		$this->havemammo = $havemammo;
+		return $this;
+	}
+
+	/**
+	 * 
+	 * @return boolean
+	 */
+	public function getHaveradio() {
+		return $this->haveradio;
+	}
+	
+	/**
+	 * 
+	 * @param boolean $haveradio 
+	 * @return self
+	 */
+	public function setHaveradio($haveradio): self {
+		$this->haveradio = $haveradio;
+		return $this;
+	}
+
+	/**
+	 * 
+	 * @return boolean
+	 */
+	public function getHavescanner() {
+		return $this->havescanner;
+	}
+	
+	/**
+	 * 
+	 * @param boolean $havescanner 
+	 * @return self
+	 */
+	public function setHavescanner($havescanner): self {
+		$this->havescanner = $havescanner;
+		return $this;
+	}
+
+	/**
+	 * 
+	 * @return \DateTime
+	 */
+	public function getDatelastexam() {
+		return $this->datelastexam;
+	}
+	
+	/**
+	 * 
+	 * @param \DateTime $datelastexam 
+	 * @return self
+	 */
+	public function setDatelastexam($datelastexam): self {
+		$this->datelastexam = $datelastexam;
 		return $this;
 	}
 }

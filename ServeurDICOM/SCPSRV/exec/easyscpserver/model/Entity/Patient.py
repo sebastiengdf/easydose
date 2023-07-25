@@ -14,3 +14,7 @@ class Patient(sqlobject.SQLObject):
     sumhavealerte=sqlobject.TinyIntCol()
     nbdoses=sqlobject.IntCol()
     havenotes=sqlobject.TinyIntCol()
+    havemammo=sqlobject.TinyIntCol()
+    haveradio=sqlobject.TinyIntCol()
+    havescanner=sqlobject.TinyIntCol()
+    datelastexam=sqlobject.DateTimeCol()

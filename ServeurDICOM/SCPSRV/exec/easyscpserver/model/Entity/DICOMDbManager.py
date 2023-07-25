@@ -28,7 +28,7 @@ class DICOMDbManager(object):
         self.manageDCMData=_manageDCMData
         self.cfg = configparser.ConfigParser()
         self.cfg.read('/home/dicomserver/Config/easydose.cfg')
-        
+        self.type=""
     
     def managePatient(self):
         sqlhub.processConnection = connectionForURI("mysql://root:Boss132@mysql:3307/easydose")
@@ -56,6 +56,9 @@ class DICOMDbManager(object):
             patientid=myPatient.id
             id_regional='ED_'+format(patientid,'09')
             myPatient.idregional=id_regional
+        if self.type == "MG":
+            myPatient.havemammo=1
+
         self.loggin.warning("Patient Enregistre")
         return myPatient
     

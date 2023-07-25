@@ -23,6 +23,7 @@ class CRManager(DICOMDbManager):
         Constructor
         '''
         super(CRManager, self).__init__(_manageDCMData,_loggin)
+        self.type="CR"
     
     def insertInformation(self):
         '''
@@ -107,7 +108,8 @@ class CRManager(DICOMDbManager):
         from Etablissement import Etablissement 
         etablissement=Etablissement.selectBy()[0]
             
-        myPatient=self.managePatient()        
+        myPatient=self.managePatient()  
+        myPatient.datelastexam=date.today()     
         self.loggin.warning("Patient Enregistre")
         from Region_Dose import RegionDose 
         RegionDose(dose=myDose, region=myRegion, date=date.today())

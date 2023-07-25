@@ -20,7 +20,7 @@ class CTManager(DICOMDbManager):
         Constructor
         '''
         super(CTManager, self).__init__(_manageDCMData,_loggin)
-    
+        self.type="CT"
     def insertInformation(self):
         '''
         Methode d insertion des infomration provenant des fichiers DICOM de type CT

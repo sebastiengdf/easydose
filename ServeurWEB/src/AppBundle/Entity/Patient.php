@@ -123,7 +123,36 @@ class Patient
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Note",mappedBy="patient",cascade={"persist", "remove"})
      */
     protected $note;
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="havemammo", type="boolean")
+     */
+    private $havemammo;
     
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="haveradio", type="boolean")
+     */
+    private $haveradio;
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="havescanner", type="boolean")
+     */
+    private $havescanner;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="datelastexam", type="datetime", nullable=true)
+     */
+    private $datelastexam;
+
+
     public function __toString(){
         return "Patient: ".$this->id." ".$this->getNom()." ".$this->prenom." , age: ".$this->age.", IPP :".$this->numipp.", id regional: ".$this->idregional.' '.$this->sex;
     }
@@ -294,5 +323,41 @@ class Patient
 		return $this;
 	}
 
+
+	/**
+	 * 
+	 * @return boolean
+	 */
+	public function getHavescanner() {
+		return $this->havescanner;
+	}
+	
+	/**
+	 * 
+	 * @param boolean $havescanner 
+	 * @return self
+	 */
+	public function setHavescanner($havescanner): self {
+		$this->havescanner = $havescanner;
+		return $this;
+	}
+
+	/**
+	 * 
+	 * @return boolean
+	 */
+	public function getHaveradio() {
+		return $this->haveradio;
+	}
+	
+	/**
+	 * 
+	 * @param boolean $haveradio 
+	 * @return self
+	 */
+	public function setHaveradio($haveradio): self {
+		$this->haveradio = $haveradio;
+		return $this;
+	}
 }
 
