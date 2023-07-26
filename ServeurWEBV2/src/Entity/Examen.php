@@ -57,7 +57,7 @@ class Examen
 
 
      /**
-     * @ORM\ManyToOne(targetEntity="Patient",inversedBy="examens")
+     * @ORM\ManyToOne(targetEntity="Patient")
      * @ORM\JoinColumn(name="id", referencedColumnName="id", nullable=true)
      * */
     

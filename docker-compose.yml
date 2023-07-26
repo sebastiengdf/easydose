@@ -14,9 +14,27 @@ services:
     privileged: true
     links:
       - mysql
+      - easydosev2
     networks:
       - default
-
+  easydosev2:
+    build:
+      context: .
+      dockerfile: easydosev2DockerFile
+    container_name: "easydosev2"
+    image: easydosev2:latest
+    restart: unless-stopped
+    tty: true
+    hostname: easydosev2
+    environment:
+      TZ: "Indian/Reunion"
+    ports:
+      - 81:81
+    privileged: true
+    links:
+      - mysql
+    networks:
+      - default
   dicomserver:
     build:
       context: .

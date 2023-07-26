@@ -7,11 +7,10 @@ RUN apt-get update
 RUN apt-get install -y --fix-missing libxml2 libxml2-dev
 RUN apt-get install -y ssh
 RUN mkdir /home/easydose/
-COPY ./ServeurWEB/ /home/easydose/
-COPY ENV/DEV/parameters.yml /home/easydose/app/config
-COPY ENV/DEV/parameters.yml.dist /home/easydose/app/config
-COPY 000-default.conf /etc/apache2/sites-available
-
+COPY ./ServeurWEBV2/ /home/easydose/
+COPY ENV/DEV/.env /home/easydose/
+COPY 000-defaultV2.conf /etc/apache2/sites-available
+RUN mv /etc/apache2/sites-available/000-defaultV2.conf /etc/apache2/sites-available/000-default.conf
 #RUN echo "Acquire {    ">>/etc/apt/apt.conf.d/proxy.conf
 #RUN echo ' HTTP::proxy "http://proxy.srr.fr:880";  '>>/etc/apt/apt.conf.d/proxy.conf
 #RUN echo 'HTTPS::proxy "http://proxy.srr.fr:880"; '>>/etc/apt/apt.conf.d/proxy.conf
@@ -57,4 +56,16 @@ RUN sed -i 's/max_execution_time = 30/max_execution_time = 240/g' $PHP_INI_DIR/p
 RUN sed -i 's/max_execution_time = 30/max_execution_time = 240/g' $PHP_INI_DIR/php.ini-development
 
 RUN cp $PHP_INI_DIR/php.ini-production /usr/local/etc/php/php.ini
-RUN a2enmod proxy_http
+
+# install de yarn npm etc
+RUN curl -sL https://deb.nodesource.com/setup_18.x |  bash -
+RUN apt-get install -y nodejs
+RUN apt-get remove -y cmdtest
+RUN npm install -g yarn
+#RUN apt-get install --fix-missing npm
+#RUN apt-get install -y yarn
+#--save-dev webpack
+RUN cd /home/easydose;npm install --save-dev webpack
+RUN cd /home/easydose;yarn add @api-platform/admin
+RUN cd /home/easydose;yarn build
+RUN cd /home/easydose;yarn encore dev
