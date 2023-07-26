@@ -9,6 +9,8 @@ RUN apt-get install -y ssh
 RUN mkdir /home/easydose/
 COPY ./ServeurWEBV2/ /home/easydose/
 COPY ENV/DEV/.env /home/easydose/
+COPY ENV/DEV/Patients.js /home/easydose/assets/js/components/Patient/
+COPY ENV/DEV/ports.conf /etc/apache2
 COPY 000-defaultV2.conf /etc/apache2/sites-available
 RUN mv /etc/apache2/sites-available/000-defaultV2.conf /etc/apache2/sites-available/000-default.conf
 #RUN echo "Acquire {    ">>/etc/apt/apt.conf.d/proxy.conf

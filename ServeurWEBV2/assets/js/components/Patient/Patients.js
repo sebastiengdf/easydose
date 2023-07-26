@@ -14,7 +14,7 @@ class Patients extends Component {
     }
     
     getPatients(page) {
-        axios.get(`http://localhost`+page).then(patients => {
+        axios.get(`http://localhost:81`+page).then(patients => {
            this.setState({ patients: patients.data, loading: false})
        })
     }
