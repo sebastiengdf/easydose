@@ -76,6 +76,9 @@ esrsearchfiltre:
 mesesr:
   path: /mesesr/{screenheigth}/{offset}
   defaults: { _controller : EasyDoseBundle:Esr:mesEsr}
+mesei:
+  path: /mesei/{screenheigth}/{offset}
+  defaults: { _controller : EasyDoseBundle:Esr:mesei}
 
 show_desc_dispositif:
   path: /show_desc_dispositif/{dispositif_id}
@@ -297,7 +300,9 @@ viewesr:
 esr:
   path: /esr/{screenheigth}
   defaults: { _controller : EasyDoseBundle:Esr:esr }  
-  
+ei:
+  path: /ei/{screenheigth}
+  defaults: { _controller : EasyDoseBundle:Esr:ei }   
 worklistoffset:
   path: /worklistoffset/{offset}/{screenheigth}
   defaults: { _controller : EasyDoseBundle:Patient:worklistoffset }  

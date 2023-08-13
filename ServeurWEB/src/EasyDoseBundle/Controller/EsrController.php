@@ -233,8 +233,72 @@ class EsrController  extends Controller
             ['offset'=>$this->get('session')->get('offset'),
                 'esrs'=>$esrs,'screenheigth' =>$screenheigth,'nbpagesToview' =>$nbpagesToview]);
     }
+
+    public function eiAction($screenheigth){
+        $em=$this->getDoctrine()->getManager();
+        $ConnectedUser = $this->get ( 'core.security' )->getUser ();
+        $etat=$em
+        ->getRepository('AppBundle\Entity\Etat')
+        ->findBy(
+            array('libelle' => 'Cloture')
+            )[0];
+        $nbpages=$this->getNbPages($screenheigth);
+        $this->savescreanAndOffset(0,$screenheigth);
+        $nb=count($this->getDoctrine()
+            ->getManager()
+            ->getRepository('AppBundle\Entity\Esr')
+            ->findAll());
+        $nbpagesToview=ceil($nb/$nbpages);
+        $seuil=$em->getRepository('AppBundle\Entity\Parametre')->findBy( array('nom' => 'seuil_charge_declenchement_esr'))[0]->getValeur();
+        
+        $esrs=$this->getDoctrine()
+        ->getManager()
+        ->getRepository('AppBundle\Entity\Esr')
+        ->getEsr($this->get('session')->get('offset')*$nbpages,$nbpages,$ConnectedUser,$etat,$seuil);
+        
+        
+        return $this->render('EasyDoseBundle:Patient:esr.html.twig',
+            ['offset'=>$this->get('session')->get('offset'),
+                'esrs'=>$esrs,'screenheigth' =>$screenheigth,'nbpagesToview' =>$nbpagesToview]);
+    }
     
-    
+    public function meseiAction($screenheigth,$offset){
+        $em=$this->getDoctrine()->getManager();
+        $ConnectedUser = $this->get ( 'core.security' )->getUser ();
+        $etat=$em
+        ->getRepository('AppBundle\Entity\Etat')
+        ->findBy(
+            array('libelle' => 'Cloture')
+            )[0];
+        
+        $nbpages=$this->getNbPages($screenheigth);
+        $this->savescreanAndOffset($offset,$screenheigth);
+        $nb=count($this->getDoctrine()
+            ->getManager()
+            ->getRepository('AppBundle\Entity\Esr')
+            ->findAll());
+        
+        
+        $nbpagesToview=ceil($nb/$nbpages);
+        
+        
+        $seuil=$em->getRepository('AppBundle\Entity\Parametre')->findBy( array('nom' => 'seuil_charge_declenchement_esr'))[0]->getValeur();
+        
+        
+        
+        $esrs=$this->getDoctrine()
+        ->getManager()
+        ->getRepository('AppBundle\Entity\Esr')
+        ->getEsr($this->get('session')->get('offset')*$nbpages,$nbpages,$ConnectedUser,$etat,$seuil);
+        
+        return $this->render('EasyDoseBundle:portlet/Esr:mes_declarations.html.twig',[
+            'screenheigth' =>$screenheigth,
+            'esrs'=>$esrs,
+            'nbpagesToview' => $nbpagesToview,
+            'offset'=>$this->get('session')->get('offset')
+            
+        ]);
+    }
     public function mesEsrAction($screenheigth,$offset){
         $em=$this->getDoctrine()->getManager();
         $ConnectedUser = $this->get ( 'core.security' )->getUser ();

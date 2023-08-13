@@ -225,6 +225,17 @@ class Esr
     /**
      * @return mixed
      */
+
+
+    /**
+     *
+     * @ORM\OneToOne(targetEntity="Souscategorie")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="souscategorie_id", referencedColumnName="id")
+     * })
+     */
+    private $souscategorie;
+
     public function getIdTypePersonnalEvent()
     {
         return $this->idTypePersonnalEvent;

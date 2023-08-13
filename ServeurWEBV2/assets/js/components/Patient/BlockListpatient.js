@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import PatientCard from './PatientCard';
 import BlockNavigationPatient from './BlockNavigationPatient';
-
+import BoutonSearch from '../Search/BoutonSearch';
 class BlockListpatient extends Component {
     constructor() {
         super();
@@ -22,7 +22,7 @@ class BlockListpatient extends Component {
                         </div>
                     </div>
                     <div className="row">
-                        <BlockNavigationPatient objectpatient={this.props.objectpatient} loading={this.props.loading} />          
+                        <BoutonSearch /><BlockNavigationPatient objectpatient={this.props.objectpatient} loading={this.props.loading} />          
                     </div>
                         {this.props.loading ? (
                             <div className={'row text-center'}>
@@ -41,6 +41,8 @@ class BlockListpatient extends Component {
                 </div>
             </div>
             </div>
+
+            
         )
     }
 }
