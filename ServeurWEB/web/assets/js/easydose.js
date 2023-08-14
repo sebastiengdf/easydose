@@ -314,7 +314,12 @@ function viewEsr(urltmp,idesr){
 	    url2=urltmp.replace('_id_esr',idesr);
 	    $('#contentesrviewer').load(url2);
 }
+function viewEi(urltmp,idesr){
 
+	//Mise à jour de la fenetre de l'ESR
+	    url2=urltmp.replace('_id_esr',idesr);
+	    $('#contenteiviewer').load(url2);
+}
 
 function esr(url){
 	var url2=url.replace("_screenheigth", screen.height);

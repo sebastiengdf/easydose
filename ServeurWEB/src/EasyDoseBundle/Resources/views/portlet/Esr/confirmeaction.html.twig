@@ -34,10 +34,19 @@ function rechargerpageESR(){
 	$('#esrmesdelarations').load(url2);
 }
 
+function rechargerpageEI(){
+	url="{{ url('mesei',{"screenheigth": screenheigth,'offset':0} ) }}";
+	var url2=url.replace("_screenheigth", screen.height);
+	$('#eimesdelarations').load(url2);
+}
 
 
 $('#confirmaction_view').on('hidden.bs.modal', function () {
-	rechargerpageESR(); 
+	{% if isesr %}
+    rechargerpageESR(); 
+  {% else %}
+    rechargerpageEI();
+  {% endif %}
 });
 
 function deleteesr(){

@@ -226,14 +226,11 @@ class Esr
      * @return mixed
      */
 
-
     /**
-     *
-     * @ORM\OneToOne(targetEntity="Souscategorie")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="souscategorie_id", referencedColumnName="id")
-     * })
-     */
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Souscategorie")
+     * @ORM\JoinColumn(name="souscategorie_id", referencedColumnName="id", nullable=true)
+     * */
+
     private $souscategorie;
 
     public function getIdTypePersonnalEvent()
@@ -764,5 +761,23 @@ class Esr
     {
         return $this->idCritereDeclaration;
     }
+
+	/**
+	 * 
+	 * @return mixed
+	 */
+	public function getSouscategorie() {
+		return $this->souscategorie;
+	}
+	
+	/**
+	 * 
+	 * @param mixed $souscategorie 
+	 * @return self
+	 */
+	public function setSouscategorie($souscategorie): self {
+		$this->souscategorie = $souscategorie;
+		return $this;
+	}
 }
 

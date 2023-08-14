@@ -171,7 +171,67 @@ class EsrController  extends Controller
         return null;
     }
 
-    
+    public function getpageEiAction($idesr,$typepage){
+        switch($typepage){
+            
+            //declarant
+            case "getdeclarant":
+                return $this->getDeclarant($idesr);
+            case $this->getUrls('getdeclarant')['img']:
+                return $this->getimgDeclarant($idesr);
+                
+                
+           //evenement significatif 1
+            case $this->getUrls('getevent1')['img']:
+                return $this->getimgEvent1($idesr);
+            case "getevent1":
+                return $this->getEvent1($idesr);
+
+                
+            //evenement significatif 2
+            case $this->getUrls('getevent2')['img']:
+                return $this->getimgEvent2($idesr);
+            case "getevent2":
+                return $this->getEvent2($idesr);
+
+                
+                
+                
+            //conséquences
+            case $this->getUrls('getconsequences')['img']:
+                return $this->getimgConsequences($idesr);
+            case "getconsequences":
+                return $this->getConsequences($idesr);
+
+                
+                
+                
+            //mesures
+            case $this->getUrls('getmesures')['img']:
+                return $this->getimgMesures($idesr);
+            case "getmesures":
+                return $this->getMesures($idesr);
+                
+                
+                
+                
+                
+            //fin
+            case $this->getUrls('getfin')['img']:
+                return $this->getimgfin($idesr);
+            case "getfin":
+                return $this->getfin($idesr);
+                
+                
+            //esr en cours
+            case "getimgesrencours":
+                return $this->getimgesrencours($idesr);
+            case "getesrencours":
+                return $this->getesrencours($idesr);
+        }
+        return null;
+    }
+
     //Page informant que ESR en cours
     private function getimgesrencours($idesr){
         
@@ -247,17 +307,17 @@ class EsrController  extends Controller
         $nb=count($this->getDoctrine()
             ->getManager()
             ->getRepository('AppBundle\Entity\Esr')
-            ->findAll());
+            ->findBy(['souscategorie'=>1]));
         $nbpagesToview=ceil($nb/$nbpages);
         $seuil=$em->getRepository('AppBundle\Entity\Parametre')->findBy( array('nom' => 'seuil_charge_declenchement_esr'))[0]->getValeur();
         
         $esrs=$this->getDoctrine()
         ->getManager()
         ->getRepository('AppBundle\Entity\Esr')
-        ->getEsr($this->get('session')->get('offset')*$nbpages,$nbpages,$ConnectedUser,$etat,$seuil);
+        ->getEi($this->get('session')->get('offset')*$nbpages,$nbpages,$ConnectedUser,$etat,$seuil);
         
         
-        return $this->render('EasyDoseBundle:Patient:esr.html.twig',
+        return $this->render('EasyDoseBundle:Patient:ei.html.twig',
             ['offset'=>$this->get('session')->get('offset'),
                 'esrs'=>$esrs,'screenheigth' =>$screenheigth,'nbpagesToview' =>$nbpagesToview]);
     }
@@ -276,7 +336,7 @@ class EsrController  extends Controller
         $nb=count($this->getDoctrine()
             ->getManager()
             ->getRepository('AppBundle\Entity\Esr')
-            ->findAll());
+            ->findBy(['souscategorie'=>1]));
         
         
         $nbpagesToview=ceil($nb/$nbpages);
@@ -289,13 +349,14 @@ class EsrController  extends Controller
         $esrs=$this->getDoctrine()
         ->getManager()
         ->getRepository('AppBundle\Entity\Esr')
-        ->getEsr($this->get('session')->get('offset')*$nbpages,$nbpages,$ConnectedUser,$etat,$seuil);
+        ->getEi($this->get('session')->get('offset')*$nbpages,$nbpages,$ConnectedUser,$etat,$seuil);
         
         return $this->render('EasyDoseBundle:portlet/Esr:mes_declarations.html.twig',[
             'screenheigth' =>$screenheigth,
             'esrs'=>$esrs,
             'nbpagesToview' => $nbpagesToview,
-            'offset'=>$this->get('session')->get('offset')
+            'offset'=>$this->get('session')->get('offset'),
+            'isesr' =>false
             
         ]);
     }
@@ -332,7 +393,8 @@ class EsrController  extends Controller
             'screenheigth' =>$screenheigth,
             'esrs'=>$esrs,
             'nbpagesToview' => $nbpagesToview,
-            'offset'=>$this->get('session')->get('offset')
+            'offset'=>$this->get('session')->get('offset'),
+            'isesr' =>true
             
         ]);
     }
@@ -421,7 +483,25 @@ class EsrController  extends Controller
         ]);
     }
     
-    
+    public function viewEiAction($esrid){
+        $em=$this->getDoctrine()
+        ->getManager();
+        $esr=$em->find('AppBundle\Entity\Esr', $esrid);
+        if($esr->getDispositif() != null)
+            $dispositif=$em->find('AppBundle\Entity\Dispositif',$esr->getDispositif());
+        if($esr->getOrigine() != null)
+            $origine=$em->find('AppBundle\Entity\OrigineEsr',$esr->getOrigine());
+        return $this->render('EasyDoseBundle:portlet/Esr/viewer:view_esr.html.twig',[
+            'esr'=>$esr,
+            'dispositif'=>$dispositif,
+            'origine'=>$origine,
+            'groupes' =>$this->getDoctrine()->getManager()->getRepository('UserBundle\Entity\Group')->findAll(),
+            'resp_nom' =>$em->getRepository('AppBundle\Entity\Parametre')->findBy( array('nom' => 'esr_resp_activite_nom'))[0]->getValeur(),
+            'resp_prenom' =>$em->getRepository('AppBundle\Entity\Parametre')->findBy( array('nom' => 'esr_resp_activite_prenom'))[0]->getValeur(),
+            'resp_email' =>$em->getRepository('AppBundle\Entity\Parametre')->findBy( array('nom' => 'esr_resp_activite_emal'))[0]->getValeur()
+        ]);
+    }
+
     public function testmailAction(){
         $ConnectedUser = $this->get ( 'core.security' )->getUser ();
         $patient=$this->getDoctrine()->getManager()->find('AppBundle\Entity\Patient', 10);
@@ -508,9 +588,44 @@ class EsrController  extends Controller
         ->findBy(
             array('libelle' => 'Encours')
             )[0];
+        $souscategorie=$em
+            ->getRepository('AppBundle\Entity\Souscategorie')
+            ->findBy(
+                array('codeSouscategorie' => '01')
+                )[0];
         $esr = new Esr();
         $esr->setUser($ConnectedUser);
         $esr->setEtat($etat);
+        $esr->setSouscategorie($souscategorie);
+        $etablissement=$this->getDoctrine()
+        ->getManager()
+        ->getRepository('AppBundle\Entity\Etablissement')
+        ->findAll()[0];
+        $esr->setEtablissement($etablissement);
+        $esr->setType('manuel');
+        $em->persist($esr);
+        $em->flush();
+            
+        return $esr;
+    }
+
+    private function createEi(){
+        $ConnectedUser = $this->get ( 'core.security' )->getUser ();
+        $em=$this->getDoctrine()->getManager();
+        $etat=$em
+        ->getRepository('AppBundle\Entity\Etat')
+        ->findBy(
+            array('libelle' => 'Encours')
+            )[0];
+        $souscategorie=$em
+            ->getRepository('AppBundle\Entity\Souscategorie')
+            ->findBy(
+                array('codeSouscategorie' => '02')
+                )[0];
+        $esr = new Esr();
+        $esr->setUser($ConnectedUser);
+        $esr->setEtat($etat);
+        $esr->setSouscategorie($souscategorie);
         $etablissement=$this->getDoctrine()
         ->getManager()
         ->getRepository('AppBundle\Entity\Etablissement')
@@ -651,6 +766,14 @@ class EsrController  extends Controller
         return $em->getRepository('AppBundle\Entity\Esr')->haveWaitingEsr($ConnectedUser);
     }
     
+    
+    private function currentUserHaveWaitingEi(){
+        $ConnectedUser = $this->get ('core.security' )->getUser();
+        $em=$this->getDoctrine()->getManager();
+        return $em->getRepository('AppBundle\Entity\Esr')->haveWaitingEi($ConnectedUser);
+    }
+    
+
     //vérification si ESR en cours present
     public function getOpeningEsrPageAction($esrid){
         $response = new Response();
@@ -698,6 +821,52 @@ class EsrController  extends Controller
         
     }
     
+     //vérification si ESR en cours present
+     public function getOpeningEiPageAction($esrid){
+        $response = new Response();
+        $openingpage="";
+        $type="";
+        //$esrforupdate=null;//$this->getCurrentEsrForUpdate();
+        $esrforupdate=$this->getEsr($esrid);
+        if($esrforupdate != null)
+        {
+            $esr=$esrforupdate;
+            $openingpage=$this->generateUrl('getpageei',array('idesr'=>$esr->getId(),'typepage'=>'getdeclarant'));
+            $openingimagepage=$this->generateUrl('getpageei',array('idesr'=>$esr->getId(),'typepage'=>'getimgdeclarant'));
+        }else{
+            //Obtention ESRCourant
+            /*$current_esr= $this->getCurrentEsr();
+            
+            if($current_esr == null)//si null obtention de l'ESR en court de rédaction
+                $esr=$this->getWaitingEsrID();        
+            else
+                $esr=$this->getEsr($current_esr->getId()); // Sinon création de nouvel ESr
+                       
+            if($esr != null)
+            { */
+              //  $openingpage=$this->generateUrl('getpageesr',array('idesr'=>$esr->getId(),'typepage'=>'getesrencours'));
+              //  $openingimagepage=$this->generateUrl('getpageesr',array('idesr'=>$esr->getId(),'typepage'=>'getimgdeclarant'));
+            /*}
+            else
+            {*/
+                $esr=$this->createEi();
+                $openingpage=$this->generateUrl('getpageei',array('idesr'=>$esr->getId(),'typepage'=>'getdeclarant'));
+                $openingimagepage=$this->generateUrl('getpageei',array('idesr'=>$esr->getId(),'typepage'=>'getimgdeclarant'));
+                $type='new';
+            //}
+        }
+        $this->setCurrentEsr($esr);
+        $response->setContent(json_encode([
+            'openingpage' =>$openingpage,
+            'openingimagepage' => $openingimagepage,
+            'id_esr_courant' =>$esr->getId(),
+            'type' => $type
+        ]));
+        $response->headers->set('Content-Type', 'application/json');
+        //$response->send();
+        return $response;
+        
+    }
     
     //vérification si ESR en cours present    
     public function haveWaitingEsrAction(){
@@ -717,6 +886,23 @@ class EsrController  extends Controller
         
     }
     
+        //vérification si ESR en cours present    
+        public function haveWaitingEiAction(){
+        
+            $response = new Response();
+            $esr=$this->getWaitingEsrID();
+            $idesr=-1;
+            if($esr!=null)
+                $idesr=$esr->getId();
+            $response->setContent(json_encode([
+                'haveWaitingEi' =>$this->currentUserHaveWaitingEi(),
+                'idWaitingEi' => $idesr
+            ]));
+            $response->headers->set('Content-Type', 'application/json');
+            //$response->send();
+            return $response;
+            
+        }
     
     private function getWaitingEsrID(){
         $ConnectedUser = $this->get ('core.security' )->getUser();

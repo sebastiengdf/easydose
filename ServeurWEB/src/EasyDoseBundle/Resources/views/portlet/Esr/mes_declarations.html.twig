@@ -1,6 +1,6 @@
 
 {% for esr in esrs %}
 
-      {% include ("@EasyDose/portlet/Esr/esr_card.html.twig") with {'esr':esr,'nbpagesToview':nbpagesToview}%} 
+      {% include ("@EasyDose/portlet/Esr/esr_card.html.twig") with {'esr':esr,'nbpagesToview':nbpagesToview,'isesr':isesr}%} 
 
 {% endfor %}

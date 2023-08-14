@@ -13,12 +13,19 @@ function getcurrentpage(){
 
 	if(typeof(currentEsrId) != "undefined")
 		{
-			urltmp="{{url('getopeningesrpage',{'esrid':'_esrid'})}}";
+			{% if isesr %}
+				urltmp="{{url('getopeningesrpage',{'esrid':'_esrid'})}}";
+			{% else %}
+				urltmp="{{url('getopeningeipage',{'esrid':'_esrid'})}}";
+			{% endif %}
 		    url2=urltmp.replace('_esrid',currentEsrId);
 		}
 	else
-    	url2="{{url('getopeningesrpage')}}";
-
+		{% if isesr %}
+    		url2="{{url('getopeningesrpage')}}";
+		{% else %}
+			url2="{{url('getopeningeipage')}}";
+		{% endif %}
 		 $.ajax({
 	       url: url2,
 	       type: 'GET',

@@ -113,17 +113,29 @@ deleteesr:
 saveesrinsessionforupdate:
   path: /saveesrinsessionforupdate/{id_esr}
   defaults: { _controller : EasyDoseBundle:Esr:saveEsrInSessionforupdate }
+
 getopeningesrpage:
   path: /getopeningesrpage/{esrid}
   defaults: { _controller : EasyDoseBundle:Esr:getOpeningEsrPage, esrid: 0 }
 
+getopeningeipage:
+  path: /getopeningeipage/{esrid}
+  defaults: { _controller : EasyDoseBundle:Esr:getOpeningEiPage, esrid: 0 }
+
 getpageesr:
   path: /getpageesr/{idesr}/{typepage}
   defaults: { _controller : EasyDoseBundle:Esr:getpageEsr}
+getpageei:
+  path: /getpageei/{idesr}/{typepage}
+  defaults: { _controller : EasyDoseBundle:Esr:getpageEi}
 
 havewaitingesr:
   path: /havewaitingesr
   defaults: { _controller : EasyDoseBundle:Esr:haveWaitingEsr}
+
+havewaitingei:
+  path: /havewaitingei
+  defaults: { _controller : EasyDoseBundle:Esr:haveWaitingEi}
 
 getwaitingesr:
   path: /getwaitingesr
@@ -133,6 +145,9 @@ getwaitingesr:
 createesr:
   path: /createesr
   defaults: { _controller : EasyDoseBundle:Esr:createEsr}
+createei:
+  path: /createei
+  defaults: { _controller : EasyDoseBundle:Esr:createEi}
 
 getlstepingle:
   path: /getlstepingle
@@ -296,7 +311,9 @@ worklist:
 viewesr:
   path: /viewesr/{esrid}
   defaults: { _controller : EasyDoseBundle:Esr:viewEsr } 
-
+viewei:
+  path: /viewei/{esrid}
+  defaults: { _controller : EasyDoseBundle:Esr:viewEi } 
 esr:
   path: /esr/{screenheigth}
   defaults: { _controller : EasyDoseBundle:Esr:esr }  

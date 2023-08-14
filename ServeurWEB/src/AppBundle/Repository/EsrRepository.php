@@ -15,14 +15,31 @@ class EsrRepository extends \Doctrine\ORM\EntityRepository
         $qb = $this->createQueryBuilder('e');
         $qb->innerJoin('e.user', 'u')
         ->innerJoin('e.etat', 's')
+        ->innerJoin('e.souscategorie', 's')
         ->where('s.libelle = :etatenattent')
+        ->andwhere('s.codeSouscategorie IN (:categorie)')
         ->andWhere('u = :utilisateur')
         ->setParameter('etatenattent','Encours')
+        ->setParameter('categorie','01')
         ->setParameter('utilisateur',$user);
         return count($qb->getQuery()->getResult())>0;
         
     }
 
+    public function haveWaitingEi($user){
+        $qb = $this->createQueryBuilder('e');
+        $qb->innerJoin('e.user', 'u')
+        ->innerJoin('e.etat', 's')
+        ->innerJoin('e.souscategorie', 's')
+        ->where('s.libelle = :etatenattent')
+        ->andwhere('s.codeSouscategorie NOT IN (:categorie)')
+        ->andWhere('u = :utilisateur')
+        ->setParameter('etatenattent','Encours')
+        ->setParameter('categorie','01')
+        ->setParameter('utilisateur',$user);
+        return count($qb->getQuery()->getResult())>0;
+        
+    }
     
     public function examensHaveSer($examenid){
         $qb = $this->createQueryBuilder('e');
@@ -48,17 +65,61 @@ class EsrRepository extends \Doctrine\ORM\EntityRepository
     
     public function getEsr($offset,$nbelement,$user,$etat,$seuil){
         $qb = $this->createQueryBuilder('e');
+        $qb->innerJoin('e.souscategorie', 's'); 
+        $qb->where('s.codeSouscategorie IN (:categorie)');
         $qb->leftJoin('e.user', 'u');        
         $qb->leftJoin('e.examen', 'x'); 
         $qb->leftJoin('x.region', 'r');
         $qb->leftJoin('r.regiondose', 'rd');
         $qb->leftJoin('rd.dose', 'd');
-        $qb->Where('u = :utilisateur');
-        $qb->orWhere('e.etat = :etat');
-        $qb->orWhere('d.xrayTubeCurren2 > :seuil');
+        $qb->andWhere('u = :utilisateur');
+        //if($etat and $etat<>'null'){
+        //    $qb->andWhere('e.etat = :etat');
+        //}
+        //if($seuil and $seuil<>'null'){
+        //    $qb->andWhere('d.xrayTubeCurren2 > :seuil');
+        //}
         $qb->setParameter('utilisateur',$user);
-        $qb->setParameter('etat',$etat);
-        $qb->setParameter('seuil',$seuil);
+        //if($etat and $etat<>'null'){
+        //    $qb->setParameter('etat',$etat);
+        //}
+        //if($seuil and $seuil<>'null'){
+        //    $qb->setParameter('seuil',$seuil);
+        //}
+        $qb->setParameter('categorie','01');
+        $qb->orderBy('e.id', 'DESC');
+        $qb->setMaxResults($nbelement);
+        $qb->setFirstResult($offset);
+        return $qb->getQuery()->getResult();
+        
+    }
+    public function getEi($offset,$nbelement,$user,$etat,$seuil){
+        $qb = $this->createQueryBuilder('e');
+        $qb->innerJoin('e.souscategorie', 's'); 
+        $qb->leftJoin('e.user', 'u');        
+        $qb->leftJoin('e.examen', 'x'); 
+        $qb->leftJoin('x.region', 'r');
+        $qb->leftJoin('r.regiondose', 'rd');
+        $qb->leftJoin('rd.dose', 'd');        
+        $qb->where('s.codeSouscategorie NOT IN (:categorie)');
+        $qb->andWhere('s.codeSouscategorie IS NOT NULL');
+        $qb->andWhere('u = :utilisateur');
+        //dump($seuil);
+        //dd($etat);
+        //if($etat and $etat<>'null'){
+        //    $qb->andWhere('e.etat = :etat');
+        //}
+        //if($seuil and $seuil<>'null'){
+        //    $qb->andWhere('d.xrayTubeCurren2 > :seuil');
+        //}        
+        $qb->setParameter('utilisateur',$user);
+        //if($etat and $etat<>'null'){
+        //    $qb->setParameter('etat',$etat);
+        //}
+        //if($seuil and $seuil<>'null'){
+        //    $qb->setParameter('seuil',$seuil);
+        //}
+        $qb->setParameter('categorie','01');
         $qb->orderBy('e.id', 'DESC');
         $qb->setMaxResults($nbelement);
         $qb->setFirstResult($offset);
