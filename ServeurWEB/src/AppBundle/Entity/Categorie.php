@@ -6,9 +6,9 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Examen
- *
  * @ORM\Table(name="categorie")
- * @ORM\Entity()
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\CategorieRepository")
+ * 
  */
 class Categorie
 {
@@ -42,9 +42,6 @@ class Categorie
      */
     private $couleurCategorie;
 
-   
-	
-
 	/**
 	 * 
 	 * @return int
@@ -63,6 +60,10 @@ class Categorie
 		return $this;
 	}
 
+	public function __toString() : string
+    {
+        return (string) $this->nomCategorie;
+    }
 	/**
 	 * 
 	 * @return string

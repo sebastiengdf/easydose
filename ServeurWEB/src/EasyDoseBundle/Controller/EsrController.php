@@ -112,7 +112,10 @@ class EsrController  extends Controller
     }
     public function getpageEsrAction($idesr,$typepage){
         switch($typepage){
+          
             
+
+
             //declarant
             case "getdeclarant":
                 return $this->getDeclarant($idesr);
@@ -174,6 +177,12 @@ class EsrController  extends Controller
     public function getpageEiAction($idesr,$typepage){
         switch($typepage){
             
+            //categorie
+            case "getcategorie":
+                return $this->getCategorie($idesr);
+            case $this->getUrls('getcategorie')['img']:
+                return $this->getimgCategorie($idesr);
+
             //declarant
             case "getdeclarant":
                 return $this->getDeclarant($idesr);
@@ -193,29 +202,19 @@ class EsrController  extends Controller
                 return $this->getimgEvent2($idesr);
             case "getevent2":
                 return $this->getEvent2($idesr);
-
-                
-                
-                
+   
             //conséquences
             case $this->getUrls('getconsequences')['img']:
                 return $this->getimgConsequences($idesr);
             case "getconsequences":
                 return $this->getConsequences($idesr);
-
-                
-                
-                
+ 
             //mesures
             case $this->getUrls('getmesures')['img']:
                 return $this->getimgMesures($idesr);
             case "getmesures":
                 return $this->getMesures($idesr);
-                
-                
-                
-                
-                
+
             //fin
             case $this->getUrls('getfin')['img']:
                 return $this->getimgfin($idesr);
@@ -574,6 +573,25 @@ class EsrController  extends Controller
         ]);
     }
     
+    private function getCategorie($idesr){
+        
+        $this->get('userAction')->setCurrentEsrPage('getcategorie');
+        $categories=$this->getDoctrine()->getManager()
+        ->getRepository('AppBundle\Entity\Categorie')
+        ->getalleicatgorie();
+
+        $this->setStep('$idesr','categorie');
+        return $this->render('EasyDoseBundle:portlet/Esr:categorie.html.twig',[
+            'urlimg'=>$this->generateUrl('getpageesr',array('idesr'=>'0','typepage'=>'getimgevent1')),
+            'urlnext'=>$this->generateUrl('getpageesr',array('idesr'=>'0','typepage'=>'getDeclarant')),
+            'idtemplatenext' =>'declarant',
+            'id_esr_courant' =>$this->getCurrentEsr()->getId(),
+            'esr' => $this->getCurrentEsr(),
+            'urlsaveesrvalue' => $this->generateUrl('saveesrvalue'),
+            'categories' => $categories
+        ]);
+    }
+
     public function show_desc_dispositifAction($dispositif_id){
         
         return $this->render('EasyDoseBundle:portlet/Esr:show_desc_dispositif.html.twig',[
@@ -773,6 +791,22 @@ class EsrController  extends Controller
         return $em->getRepository('AppBundle\Entity\Esr')->haveWaitingEi($ConnectedUser);
     }
     
+    function getAllEiSousCategorieAction($esrid,$categorieid){
+        $categorie=$this->getDoctrine()->getManager()
+        ->getRepository('AppBundle\Entity\Categorie')
+        ->find($categorieid);
+        $souscategories=$this->getDoctrine()->getManager()
+        ->getRepository('AppBundle\Entity\Souscategorie')
+        ->findBy(['categorie'=>$categorie]);
+        $esr=$this->getDoctrine()->getManager()
+        ->getRepository('AppBundle\Entity\Esr')
+        ->find($esrid);
+
+        return $this->render('EasyDoseBundle:portlet/Esr:souscategorie.html.twig',[
+            'souscategories' => $souscategories,
+            'esr' => $esr
+        ]);
+    }
 
     //vérification si ESR en cours present
     public function getOpeningEsrPageAction($esrid){
@@ -831,7 +865,7 @@ class EsrController  extends Controller
         if($esrforupdate != null)
         {
             $esr=$esrforupdate;
-            $openingpage=$this->generateUrl('getpageei',array('idesr'=>$esr->getId(),'typepage'=>'getdeclarant'));
+            $openingpage=$this->generateUrl('getpageei',array('idesr'=>$esr->getId(),'typepage'=>'getcategorie'));
             $openingimagepage=$this->generateUrl('getpageei',array('idesr'=>$esr->getId(),'typepage'=>'getimgdeclarant'));
         }else{
             //Obtention ESRCourant
@@ -850,8 +884,8 @@ class EsrController  extends Controller
             else
             {*/
                 $esr=$this->createEi();
-                $openingpage=$this->generateUrl('getpageei',array('idesr'=>$esr->getId(),'typepage'=>'getdeclarant'));
-                $openingimagepage=$this->generateUrl('getpageei',array('idesr'=>$esr->getId(),'typepage'=>'getimgdeclarant'));
+                $openingpage=$this->generateUrl('getpageei',array('idesr'=>$esr->getId(),'typepage'=>'getcategorie'));
+                $openingimagepage=$this->generateUrl('getpageei',array('idesr'=>$esr->getId(),'typepage'=>'getimgcategorie'));
                 $type='new';
             //}
         }

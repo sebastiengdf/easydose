@@ -117,7 +117,9 @@ saveesrinsessionforupdate:
 getopeningesrpage:
   path: /getopeningesrpage/{esrid}
   defaults: { _controller : EasyDoseBundle:Esr:getOpeningEsrPage, esrid: 0 }
-
+getAllEiSousCategorie:
+  path: /getAllEiSousCategorie/{esrid}/{categorieid}
+  defaults: { _controller : EasyDoseBundle:Esr:getAllEiSousCategorie, esrid: 0, categorieid :0 }
 getopeningeipage:
   path: /getopeningeipage/{esrid}
   defaults: { _controller : EasyDoseBundle:Esr:getOpeningEiPage, esrid: 0 }

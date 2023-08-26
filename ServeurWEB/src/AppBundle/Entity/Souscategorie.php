@@ -50,6 +50,11 @@ class Souscategorie
      * */
     private $categorie;
 
+	public function __toString() : string
+    {
+        return (string) $this->nomSouscategorie;
+    }
+
 	/**
 	 * 
 	 * @return int

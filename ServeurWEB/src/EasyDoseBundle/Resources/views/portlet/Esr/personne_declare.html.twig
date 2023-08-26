@@ -5,7 +5,7 @@
 <div class="modal fade" id="md_delarationei"tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
 {% endif %}
  aria-hidden="true">
-  <div class="modal-dialog modal-xl" role="document">
+  <div class="modal-dialog full-screen " role="document">
   
      
     <div class="modal-content">
@@ -18,7 +18,7 @@
   
   
       <div class="modal-body">
-            {% include ("@EasyDose/portlet/Esr/filearianne.html.twig") %}
+            {% include ("@EasyDose/portlet/Esr/filearianne.html.twig") with {'isesr':isesr} %}
  			      {% include ("@EasyDose/portlet/Esr/desc_event_global.html.twig")  with {'isesr':isesr} %}
       </div>
     </div>
