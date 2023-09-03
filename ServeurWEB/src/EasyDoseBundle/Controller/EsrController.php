@@ -194,14 +194,14 @@ class EsrController  extends Controller
             case $this->getUrls('getevent1')['img']:
                 return $this->getimgEvent1($idesr);
             case "getevent1":
-                return $this->getEvent1($idesr);
+                return $this->getEventEi1($idesr);
 
                 
             //evenement significatif 2
             case $this->getUrls('getevent2')['img']:
                 return $this->getimgEvent2($idesr);
             case "getevent2":
-                return $this->getEvent2($idesr);
+                return $this->getEventei2($idesr);
    
             //conséquences
             case $this->getUrls('getconsequences')['img']:
@@ -321,6 +321,7 @@ class EsrController  extends Controller
                 'esrs'=>$esrs,'screenheigth' =>$screenheigth,'nbpagesToview' =>$nbpagesToview]);
     }
     
+    
     public function meseiAction($screenheigth,$offset){
         $em=$this->getDoctrine()->getManager();
         $ConnectedUser = $this->get ( 'core.security' )->getUser ();
@@ -358,7 +359,18 @@ class EsrController  extends Controller
             'isesr' =>false
             
         ]);
+    
     }
+
+
+    public function getAllEtablissementei(){
+        $em=$this->getDoctrine()->getManager();
+        $etatblissementei=$em
+        ->getRepository('AppBundle\Entity\EtablissementEi')
+        ->findAll();
+        return $etatblissementei;
+    }
+
     public function mesEsrAction($screenheigth,$offset){
         $em=$this->getDoctrine()->getManager();
         $ConnectedUser = $this->get ( 'core.security' )->getUser ();
@@ -521,6 +533,16 @@ class EsrController  extends Controller
             'esrid'=>$esrid
         ]);
     }
+    public function getcolorcategoriebyidAction($categorieid)
+    {   $em=$this->getDoctrine()->getManager();
+        $categorie=$em->find('AppBundle\Entity\Categorie', $categorieid);
+        $response = new Response();
+        $response->setContent(json_encode([
+            'color' =>$categorie->getCouleurCategorie()
+        ]));
+        $response->headers->set('Content-Type', 'application/json');
+        return $response;
+    }
     public function clotureEsrAction(){
         $currentesr_id=$this->getCurrentEsr()->getID();
         $em=$this->getDoctrine()->getManager();
@@ -579,8 +601,16 @@ class EsrController  extends Controller
         $categories=$this->getDoctrine()->getManager()
         ->getRepository('AppBundle\Entity\Categorie')
         ->getalleicatgorie();
-
+        $idsouscategorie=$this->getCurrentEsr()->getSouscategorie();
         $this->setStep('$idesr','categorie');
+        $currentsouscategorie=$this->getDoctrine()->getManager()
+        ->getRepository('AppBundle\Entity\Souscategorie')
+        ->find($idsouscategorie);
+
+        $currentcategorie=$this->getDoctrine()->getManager()
+        ->getRepository('AppBundle\Entity\Categorie')
+        ->find($currentsouscategorie->getCategorie()->getId());
+
         return $this->render('EasyDoseBundle:portlet/Esr:categorie.html.twig',[
             'urlimg'=>$this->generateUrl('getpageesr',array('idesr'=>'0','typepage'=>'getimgevent1')),
             'urlnext'=>$this->generateUrl('getpageesr',array('idesr'=>'0','typepage'=>'getDeclarant')),
@@ -588,7 +618,8 @@ class EsrController  extends Controller
             'id_esr_courant' =>$this->getCurrentEsr()->getId(),
             'esr' => $this->getCurrentEsr(),
             'urlsaveesrvalue' => $this->generateUrl('saveesrvalue'),
-            'categories' => $categories
+            'categories' => $categories,
+            'currentcategorie' => $currentcategorie
         ]);
     }
 
@@ -807,7 +838,33 @@ class EsrController  extends Controller
             'esr' => $esr
         ]);
     }
+    public function savesouscategorieAction($esrid,$souscategorieid){
+        $response = new Response();
+        try{
+        
+        $esr=$this->getDoctrine()->getManager()
+        ->getRepository('AppBundle\Entity\Esr')
+        ->find($esrid);
+        $souscategorie=$this->getDoctrine()->getManager()
+        ->getRepository('AppBundle\Entity\Souscategorie')
+        ->find($souscategorieid);
+        $esr->setSouscategorie($souscategorie);
+        $this->getDoctrine()->getManager()->flush();
+        $response->setContent(json_encode([
+            'update_done' =>true,
+            'id_esr_updated' => $esrid,
+            'value' =>$souscategorieid
+        ]));
 
+    } catch (\Exception $e) {
+        $response->setContent(json_encode([
+            'update_done' =>false,
+            'exception' =>$e,
+            'value' =>$souscategorieid
+        ]));
+    }
+        return $response;
+    }
     //vérification si ESR en cours present
     public function getOpeningEsrPageAction($esrid){
         $response = new Response();
@@ -999,6 +1056,25 @@ class EsrController  extends Controller
             'criteres' =>  $this->getDoctrine()->getManager()->getRepository('AppBundle\Entity\CritereEsr')->findAll()
         ]);
     }
+
+    private function getEventEi1($idesr){
+        $this->get('userAction')->setCurrentEsrPage('getevent1');
+        $this->setStep('$idesr','event1');
+        return $this->render('EasyDoseBundle:portlet/Esr:desc_event.html.twig',[
+            //next
+            'urlimg'=>$this->generateUrl('getpageesr',array('idesr'=>'0','typepage'=>'getimgevent2')),
+            'urlnext'=>$this->generateUrl('getpageesr',array('idesr'=>'0','typepage'=>'getevent2')),
+            'idtemplatenext' =>'event2',
+            //pre
+            'urlimgprece'=>$this->generateUrl('getpageesr',array('idesr'=>'0','typepage'=>'getimgdeclarant')),
+            'urlprece'=>$this->generateUrl('getpageesr',array('idesr'=>'0','typepage'=>'getdeclarant')),
+            'idtemplateprecedent'=>'declarant',
+            'id_esr_courant' =>$this->getCurrentEsr()->getId(),
+            'esr' => $this->getCurrentEsr(),
+            'urlsaveesrvalue' => $this->generateUrl('saveesrvalue'),
+            'criteres' =>  $this->getDoctrine()->getManager()->getRepository('AppBundle\Entity\CritereEi')->findAll()
+        ]);
+    }
     
     
     
@@ -1035,7 +1111,61 @@ class EsrController  extends Controller
         ]);
     }
     
+    public function saveEtablissementEiAction($esrid,$etablissementeiid){
+        $response = new Response();
+        try{
+        
+        $esr=$this->getDoctrine()->getManager()
+        ->getRepository('AppBundle\Entity\Esr')
+        ->find($esrid);
+        $etablissement=$this->getDoctrine()->getManager()
+        ->getRepository('AppBundle\Entity\EtablissementEi')
+        ->find($etablissementeiid);
+        $esr->setEtablissementeiid ($etablissement);
+        $this->getDoctrine()->getManager()->flush();
+        $response->setContent(json_encode([
+            'update_done' =>true,
+            'id_esr_updated' => $esrid,
+            'value' =>$etablissementeiid
+        ]));
+
+    } catch (\Exception $e) {
+        $response->setContent(json_encode([
+            'update_done' =>false,
+            'exception' =>$e,
+            'value' =>$etablissementeiid
+        ]));
+    }
+        return $response;
+    }
     
+    private function getEventei2($idesr){
+        $this->get('userAction')->setCurrentEsrPage('getevent2');
+        $this->setStep('$idesr','event2');
+        $esr=$this->getCurrentEsr();
+        if($esr->getPatient()!=null)
+            $patient=$this->getDoctrine()->getManager()->find('AppBundle\Entity\Patient', $esr->getPatient()->getId());
+        return $this->render('EasyDoseBundle:portlet/Esr:desc_eventei2.html.twig',[
+            //next
+            'urlimg'=>$this->generateUrl('getpageesr',array('idesr'=>'0','typepage'=>'getimgconsequences')),
+            'urlnext'=>$this->generateUrl('getpageesr',array('idesr'=>'0','typepage'=>'getconsequences')),
+            'idtemplatenext' =>'consequences',
+            //pre
+            'urlimgprece'=>$this->generateUrl('getpageesr',array('idesr'=>'0','typepage'=>'getimgevent1')),
+            'urlprece'=>$this->generateUrl('getpageesr',array('idesr'=>'0','typepage'=>'getevent1')),
+            'idtemplateprecedent'=>'event1',
+            'id_esr_courant' =>$this->getCurrentEsr()->getId(),
+            'esr' => $esr,
+            'typepersonnevent' => $this->getDoctrine()->getManager()->getRepository('AppBundle\Entity\TypePersonnalEvent')->findAll(),
+            'patient' => $patient,
+            'allEtablissementei' => $this->getAllEtablissementei(),
+            'currentEtablissementei' => $esr->getEtablissementeiid()->getId(),
+            'urlsaveesrvalue' => $this->generateUrl('saveesrvalue'),
+            'origines' => $this->getDoctrine()->getManager()->getRepository('AppBundle\Entity\OrigineEsr')->findAll(),
+            'dispositifs' =>  $this->getDoctrine()->getManager()->getRepository('AppBundle\Entity\Dispositif')->findAll(),
+            'dispositifCourant' => ($esr->getDispositif()==null)?null:$this->getDoctrine()->getManager()->find('AppBundle\Entity\Dispositif', $esr->getDispositif())
+        ]);
+    }
     
     
     

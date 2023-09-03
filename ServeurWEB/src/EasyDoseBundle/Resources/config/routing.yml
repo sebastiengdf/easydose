@@ -119,7 +119,18 @@ getopeningesrpage:
   defaults: { _controller : EasyDoseBundle:Esr:getOpeningEsrPage, esrid: 0 }
 getAllEiSousCategorie:
   path: /getAllEiSousCategorie/{esrid}/{categorieid}
-  defaults: { _controller : EasyDoseBundle:Esr:getAllEiSousCategorie, esrid: 0, categorieid :0 }
+  defaults: { _controller : EasyDoseBundle:Esr:getAllEiSousCategorie, esrid: 0, categorieid: 0 }
+getcolorcategoriebyid:
+  path: /getcolorcategoriebyid/{categorieid}
+  defaults: { _controller : EasyDoseBundle:Esr:getcolorcategoriebyid, categorieid: 0 }
+saveEtablissementEi:
+  path: /saveEtablissementEi/{esrid}/{etablissementeiid}
+  defaults: { _controller : EasyDoseBundle:Esr:saveEtablissementEi, esrid: 0, etablissementeiid: 0 }
+
+savesouscategorie:
+  path: /savesouscategorie/{esrid}/{souscategorieid}
+  defaults: { _controller : EasyDoseBundle:Esr:savesouscategorie, esrid: 0, souscategorieid: 0 }
+
 getopeningeipage:
   path: /getopeningeipage/{esrid}
   defaults: { _controller : EasyDoseBundle:Esr:getOpeningEiPage, esrid: 0 }

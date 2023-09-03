@@ -19,9 +19,9 @@
 		
 		<div class="col-sm-12 col-md-5" onclick="loadeipage();" data-toggle="modal" data-target="#md_delarationei" id="buttonei"> <p class="d-inline rounded ml-3 boxcliquable" style="font-size: 2em">{% if granted('app', 'esr', 'create') %} {% include ("@EasyDose/portlet/Esr/viewer/add.svg.twig") %} </p> <p class="d-inline boxcliquable"><strong>Nouvel évènement Indésirable</strong> </p>{% else %} <p>&nbsp;</p> {% endif %}</div> 
 		
-		<div class="col-sm-12 col-md-5 d-none" data-toggle="modal" data-target="#md_delarationei" id="buttoneihidden"></div> 
-		
-		<div class="col-sm-12 col-md-7" >{% include ("@EasyDose/portlet/classifier/pagination_esr.html.twig")  with{'nbpagesToview':nbpagesToview,'offset':offset}%} 
+		<div class="col-sm-12 col-md-2 d-none" data-toggle="modal" data-target="#md_delarationei" id="buttoneihidden"></div> 
+		<div class="col-sm-12 col-md-4" >{% include ("@EasyDose/portlet/classifier/rechercheei.html.twig")  with{'nbpagesToview':nbpagesToview,'offset':offset}%} 
+		<div class="col-sm-12 col-md-6" >{% include ("@EasyDose/portlet/classifier/pagination_esr.html.twig")  with{'nbpagesToview':nbpagesToview,'offset':offset}%} 
 	</div>
 	</div>
 	<div class="col-md-12"> &nbsp;</div>

@@ -222,6 +222,13 @@ function loadpageesr(url1,url2,elementid){
 	$('#'+elementid).addClass('current'); 
 }
 
+function loadpageei(url1,url2,elementid){
+	loadesr('image_esr',url1);
+	loadesr('contenu_esr',url2);
+	$('.filearianne').removeClass('current');
+	$('#'+elementid).addClass('current'); 
+}
+
 function chargimgdispositif(url){
 	$('#descriptiondispositif').load(url);
 }
@@ -279,6 +286,16 @@ function lierInput(div_id,type,id){
 	    	var fonction = $(this).children("option:selected").text();
 	    	changetextindiv(div_id,fonction);  	
 	
+	});
+	}
+	if(type=='checkbox'){
+		$('.'+id).click(function(){
+			var isChecked = $(this).is(':checked');
+			if(isChecked)
+			{
+	    		var fonction = $(this).next("label").text();
+	    		changetextindiv(div_id,fonction);  	
+			}
 	});
 	}
 }
