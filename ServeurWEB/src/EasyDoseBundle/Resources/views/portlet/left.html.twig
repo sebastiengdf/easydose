@@ -14,6 +14,7 @@
         <!-- Side navigation links -->
         <li>
           <ul class="collapsible collapsible-accordion">          
+          {% if granted('app', 'patient', 'edit') %}
           <li>
           	<a   onclick="accueil('{{ url('dashboard') }}');" class="collapsible-header waves-effect arrow-r"><i class="sv-slim-icon far fa-user"></i> Accueil</a> 
           </li>
@@ -26,21 +27,24 @@
           <li>
             <a onclick="statistiques('{{ url('statistiques') }}');" class="collapsible-header waves-effect arrow-r"><i class="fab fa-think-peaks"></i> Statistiques</a>
 		   </li>
-           <li>
+       
+        <li>
             <a onclick="esr('{{ url('esr',{screenheigth:"_screenheigth"}) }}');" class="collapsible-header waves-effect arrow-r"><i class="sv-slim-icon fas fa-briefcase-medical"></i>E.S.R.</a> 
 		   </li>
+       {% endif %}
  		   </li>
            <li>
             <a onclick="esr('{{ url('ei',{screenheigth:"_screenheigth"}) }}');" class="collapsible-header waves-effect arrow-r"><i class="sv-slim-icon fas fa-briefcase-medical"></i>E.I</a> 
-		   </li>           
+		   </li>
+       {% if granted('app', 'patient', 'edit') %}          
            <li>
            	 <a onclick="optimdose('{{ url('optimdose') }}');" class="collapsible-header waves-effect arrow-r"><i class="sv-slim-icon fas fa-briefcase-medical"></i>Optimisation Dosimétrique</a> 
 		   </li>
-            
+         
             <li>
             <a   class="collapsible-header waves-effect arrow-r " data-toggle="modal" data-target="#modalPoll-1"><i class="sv-slim-icon fas fa-chevron-right"></i> Recherche Patient</a>
           </li>
-            
+          {% endif %}  
             
            <li>
              <a class="collapsible-header waves-effect arrow-r"   data-toggle="modal" data-target="#exampleModalLongSC"><i class="sv-slim-icon far fa-address-card"></i>Contacts</a>

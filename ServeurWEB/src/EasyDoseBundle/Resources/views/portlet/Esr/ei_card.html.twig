@@ -9,10 +9,11 @@
       {% include ("@EasyDose/portlet/Esr/entete_ei_card.html.twig")  with {'esrid' : esr.id , 'categorie' : esr.souscategorie.categorie ,'esrtype' : esr.type, } %}  
            
       {% if granted('app', 'esr', 'delete') or esr.etat.libelle=='EnCours' %}
-     
-      <button type="button"  class="close" style="width:1em;" data-id="{{ esr.id }}" data-toggle="modal" data-target="#confirmaction_view">
-          <span aria-hidden="true">&times;</span>
-        </button>
+		{% if ConnectedUser==esr.user or ConnectedUser.issuperadmin() %} 
+		<button type="button"  class="close" style="width:1em;" data-id="{{ esr.id }}" data-toggle="modal" data-target="#confirmaction_view">
+			<span aria-hidden="true">&times;</span>
+			</button>
+		{% endif %}
        {% endif %}
       <!-- Card content -->
       <div class="card-body pb-1">
