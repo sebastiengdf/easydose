@@ -43,9 +43,9 @@ RUN echo "# Description:       Start the web server">> /etc/rc0.d/K01cacheclear.
 RUN echo "#  This script will start the apache2 web server.">> /etc/rc0.d/K01cacheclear.sh
 RUN echo "### END INIT INFO">> /etc/rc0.d/K01cacheclear.sh
 RUN echo " ">> /etc/rc0.d/K01cacheclear.sh
-
 RUN echo "php /home/easydose/bin/console cache:clear --env=dev">> /etc/rc0.d/K01cacheclear.sh
 RUN echo "chmod 777 -R /home/easydose/var">> /etc/rc0.d/K01cacheclear.sh
+RUN echo "cd /home/easydose && php bin/console assets:install">> /etc/rc0.d/K01cacheclear.sh
 RUN echo "exit 0" >> /etc/rc0.d/K01cacheclear.sh
 RUN chmod 777  /etc/rc0.d/K01cacheclear.sh
 RUN sh /etc/rc0.d/K01cacheclear.sh

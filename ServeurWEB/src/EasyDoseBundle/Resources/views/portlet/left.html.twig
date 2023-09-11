@@ -18,11 +18,10 @@
           <li>
           	<a   onclick="accueil('{{ url('dashboard') }}');" class="collapsible-header waves-effect arrow-r"><i class="sv-slim-icon far fa-user"></i> Accueil</a> 
           </li>
-          
+
           <li>
-           <a   onclick="listepatients('{{ url('worklistsearchFiltre',{'withradio':'false','withscan':'false','withmammo':'false','withnrd':'false','withpediatrie':'false','withpatientproc':'false',offset:"0"}) }}');" class="collapsible-header waves-effect arrow-r"><i class="sv-slim-icon far fa-user"></i> Liste des Patients</a>
+           <a   onclick="listepatients('{{ url('worklistsearchFiltre',{'withradio':'false','withscan':'false','withmammo':'false','withnrd':'false','withpediatrie':'false','withpatientproc':'false',screenheigth:"_screenheigth",offset:"0"}) }}');" class="collapsible-header waves-effect arrow-r"><i class="sv-slim-icon far fa-user"></i> Liste des Patients</a>
           </li>
-            
           
           <li>
             <a onclick="statistiques('{{ url('statistiques') }}');" class="collapsible-header waves-effect arrow-r"><i class="fab fa-think-peaks"></i> Statistiques</a>
@@ -34,7 +33,7 @@
        {% endif %}
  		   </li>
            <li>
-            <a onclick="esr('{{ url('ei',{screenheigth:"_screenheigth"}) }}');" class="collapsible-header waves-effect arrow-r"><i class="sv-slim-icon fas fa-briefcase-medical"></i>E.I</a> 
+            <a onclick="esr('{{ url('ei',{screenheigth:"_screenheigth"}) }}');" class="collapsible-header waves-effect arrow-r"><i class="sv-slim-icon fas fa-briefcase-medical"></i>Evènements Indésirables</a> 
 		   </li>
        {% if granted('app', 'patient', 'edit') %}          
            <li>
