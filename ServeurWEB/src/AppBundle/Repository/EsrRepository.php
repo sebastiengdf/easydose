@@ -93,17 +93,154 @@ class EsrRepository extends \Doctrine\ORM\EntityRepository
         return $qb->getQuery()->getResult();
         
     }
+    
+    public function getEiSearch($offset,$nbelement,$user,$etat,$seuil,$categorie,$souscategorieslist,$datedebut,$datefin){
+        $qb = $this->createQueryBuilder('e');
+        $qb->innerJoin('e.souscategorie', 's'); 
+        $qb->leftJoin('e.user', 'u'); 
+        
+        $qb->leftJoin('e.etat', 't');          
+        //$qb->leftJoin('e.examen', 'x'); 
+        //$qb->leftJoin('x.region', 'r');
+        //$qb->leftJoin('r.regiondose', 'rd');
+        //$qb->leftJoin('rd.dose', 'd');        
+        $qb->where('s.codeSouscategorie NOT IN (:categorie)');
+        if($souscategorieslist and $souscategorieslist<>'null')
+            $qb->andWhere('s.id IN (:souscategorie)');
+        
+        $qb->andWhere('s.codeSouscategorie IS NOT NULL');
+        //$qb->andWhere('e.datedecla IS NOT NULL');
+        $qb->andWhere('u = :utilisateur   OR t.libelle=:valide');
+        //dump($seuil);
+        //dd($etat);
+
+        //if($categorie and $categorie<>'null'){
+        //    $qb->andWhere('e.souscategorie in (:categories)');
+        //}
+
+        if($datedebut and $datedebut<>'null'){
+            $qb->andWhere('e.datedecla >= :datedebut');
+        }
+        if($datefin and $datefin<>'null'){
+            $qb->andWhere('e.datedecla <= :datefin');
+        }
+        //if($seuil and $seuil<>'null'){
+        //    $qb->andWhere('d.xrayTubeCurren2 > :seuil');
+        //}        
+        $qb->setParameter('utilisateur',$user);
+        //if($etat and $etat<>'null'){
+        //    $qb->setParameter('etat',$etat);
+        //}
+        //if($seuil and $seuil<>'null'){
+        //    $qb->setParameter('seuil',$seuil);
+        //}
+        $qb->setParameter('categorie','01');
+        if($datedebut and $datedebut<>'null'){
+            $qb->setParameter('datedebut',$datedebut);
+        }
+        if($datefin and $datefin<>'null'){
+            $qb->setParameter('datefin',$datefin);
+        }
+        if($souscategorieslist and $souscategorieslist<>'null'){
+            $qb->setParameter('souscategorie',$souscategorieslist);
+        }
+        $qb->setParameter('valide','Cloture');  
+        $qb->orderBy('e.id', 'DESC');
+        $qb->setMaxResults($nbelement);
+        $qb->setFirstResult($offset);
+        
+       // dump($qb->getQuery());
+        return $qb->getQuery()->getResult();
+        
+    }
+
+    public function countEi($user){
+        $qb = $this->createQueryBuilder('e');
+        $qb->innerJoin('e.souscategorie', 's');
+        $qb->leftJoin('e.user', 'u'); 
+        $qb->leftJoin('e.etat', 't');  
+        $qb->where('s.codeSouscategorie NOT IN (:categorie)');
+        $qb->andWhere('u = :utilisateur OR t.libelle=:valide');
+        $qb->setParameter('utilisateur',$user);
+        $qb->setParameter('categorie','01');
+        $qb->setParameter('valide','Cloture'); 
+        $qb->orderBy('e.id', 'DESC');
+       
+       // dump($qb->getQuery());
+        return count($qb->getQuery()->getResult());
+        
+    }
+
+    public function countEiSearch($offset,$nbelement,$user,$etat,$seuil,$categorie,$souscategorieslist,$datedebut,$datefin){
+        $qb = $this->createQueryBuilder('e');
+        $qb->innerJoin('e.souscategorie', 's'); 
+        $qb->leftJoin('e.user', 'u'); 
+        $qb->leftJoin('e.etat', 't');        
+        //$qb->leftJoin('e.examen', 'x'); 
+        //$qb->leftJoin('x.region', 'r');
+        //$qb->leftJoin('r.regiondose', 'rd');
+        //$qb->leftJoin('rd.dose', 'd');        
+        $qb->where('s.codeSouscategorie NOT IN (:categorie)');
+        if($souscategorieslist and $souscategorieslist<>'null')
+            $qb->andWhere('s.id IN (:souscategorie)');
+        
+        $qb->andWhere('s.codeSouscategorie IS NOT NULL');
+        //$qb->andWhere('e.datedecla IS NOT NULL');
+        $qb->andWhere('u = :utilisateur  OR t.libelle=:valide');
+        //dump($seuil);
+        //dd($etat);
+
+        //if($categorie and $categorie<>'null'){
+        //    $qb->andWhere('e.souscategorie in (:categories)');
+        //}
+
+        if($datedebut and $datedebut<>'null'){
+            $qb->andWhere('e.datedecla >= :datedebut');
+        }
+        if($datefin and $datefin<>'null'){
+            $qb->andWhere('e.datedecla <= :datefin');
+        }
+        //if($seuil and $seuil<>'null'){
+        //    $qb->andWhere('d.xrayTubeCurren2 > :seuil');
+        //}        
+        $qb->setParameter('utilisateur',$user);
+        //if($etat and $etat<>'null'){
+        //    $qb->setParameter('etat',$etat);
+        //}
+        //if($seuil and $seuil<>'null'){
+        //    $qb->setParameter('seuil',$seuil);
+        //}
+        $qb->setParameter('categorie','01');
+        if($datedebut and $datedebut<>'null'){
+            $qb->setParameter('datedebut',$datedebut);
+        }
+        if($datefin and $datefin<>'null'){
+            $qb->setParameter('datefin',$datefin);
+        }
+        if($souscategorieslist and $souscategorieslist<>'null'){
+            $qb->setParameter('souscategorie',$souscategorieslist);
+        }
+        $qb->setParameter('valide','Cloture');  
+        $qb->orderBy('e.id', 'DESC');
+        $qb->setMaxResults($nbelement);
+        $qb->setFirstResult($offset);
+        
+       // dump($qb->getQuery());
+        return count($qb->getQuery()->getResult());
+        
+    }
     public function getEi($offset,$nbelement,$user,$etat,$seuil){
         $qb = $this->createQueryBuilder('e');
         $qb->innerJoin('e.souscategorie', 's'); 
         $qb->leftJoin('e.user', 'u');        
-        $qb->leftJoin('e.examen', 'x'); 
+        $qb->leftJoin('e.examen', 'x');
+        $qb->leftJoin('e.etat', 't');  
         $qb->leftJoin('x.region', 'r');
         $qb->leftJoin('r.regiondose', 'rd');
         $qb->leftJoin('rd.dose', 'd');        
         $qb->where('s.codeSouscategorie NOT IN (:categorie)');
         $qb->andWhere('s.codeSouscategorie IS NOT NULL');
-        $qb->andWhere('u = :utilisateur');
+        $qb->andWhere('u = :utilisateur OR t.libelle=:valide');
         //dump($seuil);
         //dd($etat);
         //if($etat and $etat<>'null'){
@@ -120,6 +257,7 @@ class EsrRepository extends \Doctrine\ORM\EntityRepository
         //    $qb->setParameter('seuil',$seuil);
         //}
         $qb->setParameter('categorie','01');
+        $qb->setParameter('valide','Cloture');        
         $qb->orderBy('e.id', 'DESC');
         $qb->setMaxResults($nbelement);
         $qb->setFirstResult($offset);

@@ -47,7 +47,7 @@
                         </select>
                         
                         <!--  Passage à la page suivante -->
-                      	<button class="btn btn-secondary my-4 btn-block" onclick="loadpageesr('{{ urlimg }}','{{ urlnext }}','{{ idtemplatenext }}');">Suivant</button>                   
+                      	{% include ("@EasyDose/portlet/Esr/precedent_next_esr.html.twig") %}                  
                        
 
                         <hr>

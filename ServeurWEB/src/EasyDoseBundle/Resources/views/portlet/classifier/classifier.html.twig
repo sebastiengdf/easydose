@@ -2,6 +2,14 @@
 {% set functionnamenext="next" %}  
 {% set functionnamelast="last" %}  
 
+{% if isesr is defined %}  
+
+    {% set functionname="thisoneei" %}                        
+    {% set functionnamenext="nextei" %}  
+    {% set functionnamelast="lastei" %}  
+
+{% endif %}  
+
         <div style="float:right;margin-top:5px;" class="dataTables_paginate paging_simple_numbers" id="dtBasicExample_paginate" >
               <ul class="pagination">
 			<!-- Gestion Précédent -->

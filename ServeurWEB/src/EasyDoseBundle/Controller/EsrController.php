@@ -63,6 +63,9 @@ class EsrController  extends Controller
         }else if( $valuename=='fonctiondeclarantesr'){
            // $value=$em->find('UserBundle\Entity\TypePersonnalEvent', $request->get('value'));
             $valuename="FonctionDeclarant";
+        }else if( $valuename=='datedecla'){
+            $date=new \DateTime();
+            $value=$date->createFromFormat('d/m/Y H:i:s',"$value 00:00:00");
         }
         else
            $value=$request->get('value');
@@ -95,6 +98,8 @@ class EsrController  extends Controller
     
     private function getUrls($name){
         switch ($name) {
+            case "getcategorie":
+                return array('img'=>'getimgcategorie','idtemplate'=>'categorie');  
             case "getdeclarant":
                 return array('img'=>'getimgdeclarant','idtemplate'=>'declarant');  
             case "getevent1":
@@ -185,7 +190,7 @@ class EsrController  extends Controller
 
             //declarant
             case "getdeclarant":
-                return $this->getDeclarant($idesr);
+                return $this->getDeclarantei($idesr);
             case $this->getUrls('getdeclarant')['img']:
                 return $this->getimgDeclarant($idesr);
                 
@@ -207,19 +212,19 @@ class EsrController  extends Controller
             case $this->getUrls('getconsequences')['img']:
                 return $this->getimgConsequences($idesr);
             case "getconsequences":
-                return $this->getConsequences($idesr);
+                return $this->getConsequencesei($idesr);
  
             //mesures
             case $this->getUrls('getmesures')['img']:
                 return $this->getimgMesures($idesr);
             case "getmesures":
-                return $this->getMesures($idesr);
+                return $this->getMesuresei($idesr);
 
             //fin
             case $this->getUrls('getfin')['img']:
                 return $this->getimgfin($idesr);
             case "getfin":
-                return $this->getfin($idesr);
+                return $this->getfinei($idesr);
                 
                 
             //esr en cours
@@ -264,7 +269,18 @@ class EsrController  extends Controller
         ]);
     }
     
-    
+   
+    private function getesrencoursei($idesr){
+        
+        //set current action
+        $page=$this->get('userAction')->getCurrentEsrPage();
+        
+        return $this->render('EasyDoseBundle:portlet/Esr:esr_en_cours.html.twig',[
+            'urlimg'=>$this->generateUrl('getpageei',array('idesr'=>'0','typepage'=>$this->getUrls('getevent1')['img'])),
+            'urlnext'=>$this->generateUrl('getpageei',array('idesr'=>'0','typepage'=>$page)),
+            'idtemplatenext' =>$this->getUrls($page)['idtemplate']
+        ]);
+    } 
     public function esrAction($screenheigth){
         $em=$this->getDoctrine()->getManager();
         $ConnectedUser = $this->get ( 'core.security' )->getUser ();
@@ -293,6 +309,87 @@ class EsrController  extends Controller
                 'esrs'=>$esrs,'screenheigth' =>$screenheigth,'nbpagesToview' =>$nbpagesToview]);
     }
 
+    public function eisearchAction($screenheigth,$categorie,$souscategorieslist,$datedebut,$datefin){
+        $em=$this->getDoctrine()->getManager();
+        //$this->get('session')->set('datedebut', $datedebut);
+        //$this->get('session')->set('datefin', $datefin);
+        if($souscategorieslist=="-")
+            $souscategorieslist="";
+        $lstsouscat=explode(',',$souscategorieslist);
+        $criteresouscat= array();
+  
+  
+        foreach ($lstsouscat as $souscat){
+            $sc=$em
+            ->getRepository('AppBundle\Entity\Souscategorie')
+            ->find($souscat);
+            array_push($criteresouscat,$sc);
+        }        
+        $ConnectedUser = $this->get ( 'core.security' )->getUser ();
+        $etat=$em
+        ->getRepository('AppBundle\Entity\Etat')
+        ->findBy(
+            array('libelle' => 'Cloture')
+            )[0];
+        $nbpages=$this->getNbPages($screenheigth);
+        $this->savescreanAndOffset(0,$screenheigth);
+        $seuil=$em->getRepository('AppBundle\Entity\Parametre')->findBy( array('nom' => 'seuil_charge_declenchement_esr'))[0]->getValeur();
+        
+        if($datedebut!='-')        
+        {
+            $datedeb=new \DateTime();
+            $datedeb1=$datedeb->createFromFormat('d-m-Y H:i:s',"$datedebut 00:00:00", $DTZ);
+        }else
+            $datedeb1='null';
+        if($datefin!='-'){
+            $datefn=new \DateTime();
+            $datefn1=$datefn->createFromFormat('d-m-Y H:i:s',"$datefin 00:00:00", $DTZ);
+        }else
+            $datefn1='null';
+
+        $nb=$this->getDoctrine()
+            ->getManager()
+            ->getRepository('AppBundle\Entity\Esr')
+            ->countEiSearch($this->get('session')->get('offset')*$nbpages,$nbpages,$ConnectedUser,$etat,$seuil,$categorie,$criteresouscat,$datedeb1,$datefn1);
+        $nbpagesToview=ceil($nb/$nbpages);
+        
+
+        date_default_timezone_set('Europe/Paris');
+        // --- La setlocale() fonctionnne pour strftime mais pas pour DateTime->format()
+        setlocale(LC_TIME, 'fr_FR.utf8','fra');// OK
+
+        $DTZ = new \DateTimeZone('Europe/Paris');
+
+        
+        
+
+        $esrs=$this->getDoctrine()
+        ->getManager()
+        ->getRepository('AppBundle\Entity\Esr')
+        ->getEiSearch($this->get('session')->get('offset')*$nbpages,$nbpages,$ConnectedUser,$etat,$seuil,$categorie,$criteresouscat,$datedeb1,$datefn1);
+        
+        //->format(
+        $categories=$this->getDoctrine()
+        ->getManager()
+        ->getRepository('AppBundle\Entity\Categorie')
+        ->getalleicatgorie();
+        return $this->render('EasyDoseBundle:Patient:ei.html.twig',
+            ['offset'=>$this->get('session')->get('offset'),
+                'categories'=>$categories,
+                'esrs'=>$esrs,'screenheigth' =>$screenheigth,
+                'nbpagesToview' =>$nbpagesToview,
+                'datedebut'=>$datedeb1==='null'?'':$this->replacemonth($datedeb1->format('d F, Y')) ,
+                'datefin'=> $datefn1==='null'?'':$this->replacemonth($datefn1->format('d F, Y')),
+                'categorie'=>$categorie,'souscategorieslist'=>$souscategorieslist,
+                'datedebutf'=>$datedebut,
+                'datefinf'=>$datefin,'issearch' => true]);
+    }
+    public function replacemonth($date){
+        $search  = array('January','February','March','April','May','June','July','August','September','October','November','December');
+        $replace = array('Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Aout', 'Septembre', 'Octobre',
+        'Novembre', 'Decembre');
+        return str_replace($search, $replace, $date);
+    }
     public function eiAction($screenheigth){
         $em=$this->getDoctrine()->getManager();
         $ConnectedUser = $this->get ( 'core.security' )->getUser ();
@@ -303,10 +400,11 @@ class EsrController  extends Controller
             )[0];
         $nbpages=$this->getNbPages($screenheigth);
         $this->savescreanAndOffset(0,$screenheigth);
-        $nb=count($this->getDoctrine()
+        $nb=$this->getDoctrine()
             ->getManager()
             ->getRepository('AppBundle\Entity\Esr')
-            ->findBy(['souscategorie'=>1]));
+            ->countEi($ConnectedUser);
+   
         $nbpagesToview=ceil($nb/$nbpages);
         $seuil=$em->getRepository('AppBundle\Entity\Parametre')->findBy( array('nom' => 'seuil_charge_declenchement_esr'))[0]->getValeur();
         
@@ -315,9 +413,13 @@ class EsrController  extends Controller
         ->getRepository('AppBundle\Entity\Esr')
         ->getEi($this->get('session')->get('offset')*$nbpages,$nbpages,$ConnectedUser,$etat,$seuil);
         
-        
+        $categories=$this->getDoctrine()
+        ->getManager()
+        ->getRepository('AppBundle\Entity\Categorie')
+        ->getalleicatgorie();
         return $this->render('EasyDoseBundle:Patient:ei.html.twig',
             ['offset'=>$this->get('session')->get('offset'),
+                'categories'=>$categories,
                 'esrs'=>$esrs,'screenheigth' =>$screenheigth,'nbpagesToview' =>$nbpagesToview]);
     }
     
@@ -333,10 +435,10 @@ class EsrController  extends Controller
         
         $nbpages=$this->getNbPages($screenheigth);
         $this->savescreanAndOffset($offset,$screenheigth);
-        $nb=count($this->getDoctrine()
+        $nb=$this->getDoctrine()
             ->getManager()
             ->getRepository('AppBundle\Entity\Esr')
-            ->findBy(['souscategorie'=>1]));
+            ->countEi($ConnectedUser);
         
         
         $nbpagesToview=ceil($nb/$nbpages);
@@ -356,13 +458,95 @@ class EsrController  extends Controller
             'esrs'=>$esrs,
             'nbpagesToview' => $nbpagesToview,
             'offset'=>$this->get('session')->get('offset'),
-            'isesr' =>false
+            'isesr' =>false,
+            'ConnectedUser' =>$ConnectedUser
             
         ]);
     
     }
+ 
+    public function meseisearchAction($screenheigth,$offset,$categorie,$souscategorieslist,$datedebutf,$datefinf){
+        $em=$this->getDoctrine()->getManager();
+        $ConnectedUser = $this->get ( 'core.security' )->getUser ();
+        $etat=$em
+        ->getRepository('AppBundle\Entity\Etat')
+        ->findBy(
+            array('libelle' => 'Cloture')
+            )[0];
+        
 
+        if($souscategorieslist=="-")
+            $lstsouscat="null";
+        else{
+            $lstsouscat=explode(',',$souscategorieslist);
+            $criteresouscat= '';
+        }
+        $i=0;
+        foreach ($lstsouscat as $souscat){
+            if($i==0)
+                $criteresouscat=$criteresouscat.$souscat;
+            else
+                $criteresouscat=$criteresouscat.','.$souscat;
+        }
+        //dump($lstsouscat);
 
+        $nbpages=$this->getNbPages($screenheigth);
+        $this->savescreanAndOffset($offset,$screenheigth);
+        $nb=$this->getDoctrine()
+            ->getManager()
+            ->getRepository('AppBundle\Entity\Esr')
+            ->countEiSearch($this->get('session')->get('offset')*$nbpages,$nbpages,$ConnectedUser,$etat,$seuil,$categorie,$lstsouscat,$datedeb1,$datefn1);
+        
+        
+        $nbpagesToview=ceil($nb/$nbpages);
+        
+        
+        $seuil=$em->getRepository('AppBundle\Entity\Parametre')->findBy( array('nom' => 'seuil_charge_declenchement_esr'))[0]->getValeur();
+        
+        
+
+        
+        date_default_timezone_set('Europe/Paris');
+        // --- La setlocale() fonctionnne pour strftime mais pas pour DateTime->format()
+        setlocale(LC_TIME, 'fr_FR.utf8','fra');// OK
+
+        $DTZ = new \DateTimeZone('Europe/Paris');
+
+        $datedeb=new \DateTime();
+        if($datedebutf!='-')
+            $datedeb1=$datedeb->createFromFormat('d-m-Y H:i:s',"$datedebutf 00:00:00", $DTZ);
+        else
+            $datedeb1='null';
+
+        $datefn=new \DateTime();
+        if($datefinf!='-')
+            $datefn1=$datefn->createFromFormat('d-m-Y H:i:s',"$datefinf 00:00:00", $DTZ);
+        else
+            $datefn1='null';
+        $esrs=$this->getDoctrine()
+        ->getManager()
+        ->getRepository('AppBundle\Entity\Esr')
+        ->getEiSearch($this->get('session')->get('offset')*$nbpages,$nbpages,$ConnectedUser,$etat,$seuil,$categorie,$lstsouscat,$datedeb1,$datefn1);
+        
+        //->
+
+        
+       // $esrs=$this->getDoctrine()
+       // ->getManager()
+       // ->getRepository('AppBundle\Entity\Esr')
+        //->getEi($this->get('session')->get('offset')*$nbpages,$nbpages,$ConnectedUser,$etat,$seuil);
+        
+        return $this->render('EasyDoseBundle:portlet/Esr:mes_declarations.html.twig',[
+            'screenheigth' =>$screenheigth,
+            'esrs'=>$esrs,
+            'nbpagesToview' => $nbpagesToview,
+            'offset'=>$this->get('session')->get('offset'),
+            'isesr' =>false,
+            'ConnectedUser' =>$ConnectedUser
+            
+        ]);
+    
+    }
     public function getAllEtablissementei(){
         $em=$this->getDoctrine()->getManager();
         $etatblissementei=$em
@@ -405,7 +589,8 @@ class EsrController  extends Controller
             'esrs'=>$esrs,
             'nbpagesToview' => $nbpagesToview,
             'offset'=>$this->get('session')->get('offset'),
-            'isesr' =>true
+            'isesr' =>true,
+            'ConnectedUser' =>$ConnectedUser
             
         ]);
     }
@@ -474,7 +659,84 @@ class EsrController  extends Controller
                     
         ]);
     }
+    
+    public function eiSearchFiltreAction($screenheigth,$offset,$categorie,$souscategorieslist,$datedebut,$datefin){
+        $em=$this->getDoctrine()->getManager();
+        $ConnectedUser = $this->get ( 'core.security' )->getUser ();
+        $etat=$em
+        ->getRepository('AppBundle\Entity\Etat')
+        ->findBy(
+            array('libelle' => 'Cloture')
+            )[0];
+        $this->savescreanAndOffset($offset,$screenheigth);
         
+        if($souscategorieslist=="-")
+        $lstsouscat="null";
+        else{
+            $lstsouscat=explode(',',$souscategorieslist);
+            $criteresouscat= '';
+        }
+        $i=0;
+        foreach ($lstsouscat as $souscat){
+            if($i==0)
+                $criteresouscat=$criteresouscat.$souscat;
+            else
+                $criteresouscat=$criteresouscat.','.$souscat;
+        }
+
+
+        $nbpages=$this->getNbPages($screenheigth);
+        $this->savescreanAndOffset($offset,$screenheigth);
+        $nb=$this->getDoctrine()
+        ->getManager()
+        ->getRepository('AppBundle\Entity\Esr')
+        ->countEi($ConnectedUser);
+        $seuil=$em->getRepository('AppBundle\Entity\Parametre')->findBy( array('nom' => 'seuil_charge_declenchement_esr'))[0]->getValeur();
+        
+        date_default_timezone_set('Europe/Paris');
+        // --- La setlocale() fonctionnne pour strftime mais pas pour DateTime->format()
+        setlocale(LC_TIME, 'fr_FR.utf8','fra');// OK
+
+        $DTZ = new \DateTimeZone('Europe/Paris');
+
+        $datedeb=new \DateTime();
+        if($datedebut!='-')
+            $datedeb1=$datedeb->createFromFormat('d-m-Y H:i:s',"$datedebut 00:00:00", $DTZ);
+        else
+            $datedeb1='null';
+
+        $datefn=new \DateTime();
+        if($datefin!='-')
+            $datefn1=$datefn->createFromFormat('d-m-Y H:i:s',"$datefin 00:00:00", $DTZ);
+        else
+            $datefn1='null';
+        $esrs=$this->getDoctrine();
+
+        $nbpagesToview=ceil($nb/$nbpages);
+        
+        $esrs=$this->getDoctrine()
+        ->getManager()
+        ->getRepository('AppBundle\Entity\Esr')->getEi($this->get('session')->get('offset')*$nbpages,$nbpages,$ConnectedUser,$etat,$seuil);
+        
+        $categories=$this->getDoctrine()
+        ->getManager()
+        ->getRepository('AppBundle\Entity\Categorie')
+        ->findAll();
+        
+        return $this->render('EasyDoseBundle:Patient:ei.html.twig',[ 
+                    'screenheigth' =>$screenheigth,
+                    'esrs'=>$esrs,                 
+                    'nbpagesToview' => $nbpagesToview,
+                    'datedebut'=>$datedeb1==='null'?'':$this->replacemonth($datedeb1->format('d F, Y')) ,
+                    'datefin'=> $datefn1==='null'?'':$this->replacemonth($datefn1->format('d F, Y')),
+                    'categorie'=>$categorie,'souscategorieslist'=>$souscategorieslist,
+                    'offset'=>$this->get('session')->get('offset'),
+                    'datedebutf'=>$datedebut,
+                    'categories'=>$categories,
+                    'datefinf'=>$datefin,'issearch' => true
+                    
+        ]);
+    }
     public function viewEsrAction($esrid){
         $em=$this->getDoctrine()
         ->getManager();
@@ -527,6 +789,13 @@ class EsrController  extends Controller
         ]);
     }
     
+    public function paginationAction($nbpagesToview,$offset){
+        return $this->render('EasyDoseBundle:portlet:classifier/pagination_esr_ei.html.twig',[
+            'nbpagesToview'=>$nbpagesToview,
+            'offset' => $offset
+        ]);
+
+    }
     
     public function confirmactionAction($esrid){
         return $this->render('EasyDoseBundle:portlet/Esr:confirmeaction.html.twig',[
@@ -547,25 +816,66 @@ class EsrController  extends Controller
         $currentesr_id=$this->getCurrentEsr()->getID();
         $em=$this->getDoctrine()->getManager();
         $esr=$em->find('AppBundle\Entity\Esr', $currentesr_id);
-        $em=$this->getDoctrine()->getManager();
-        $etat=$em
-        ->getRepository('AppBundle\Entity\Etat')
-        ->findBy(
-            array('libelle' => 'Cloture')
-            )[0];
-        $esr->setEtat($etat);
-        $esr->setDateSauvegarde(new \DateTime('now'));
-        $esr->setUser($ConnectedUser = $this->get ('core.security' )->getUser());
-        $em->persist($esr);
-        $em->flush();
-        $response = new Response();
-        $response->setContent(json_encode([
-            'cloture' =>'true'
-        ]));
+        $listemanquant='';
+        //Vérification esr
+        if ($esr->getConsequencepotentielle() ==null ||
+        $esr->getConsequencepotentielle() == '' )
+            $listemanquant= $listemanquant . " Pavé 'Conséquences potentielles' vide";
+       if( $esr->getConsequencereelleim()  == null ||
+        $esr->getConsequencereelleim() == ''
+        )
+        $listemanquant= $listemanquant . " Pavé 'Conséquences immédiates' vide";
+
+        if( $esr->getActionconservatoires()  == null ||
+        $esr->getActionconservatoires() == ''
+        )
+        $listemanquant= $listemanquant . " Pavé 'Actions conservatoires' vide";
+
+        if( $esr->getActioncorrectives() == null ||
+        $esr->getActioncorrectives() == ''
+        )
+        $listemanquant= $listemanquant . " Pavé 'Actions correctives' vide";
+
+        if( $esr->getDateDetectionESR() == null ||
+        $esr->getDateDetectionESR() == ''
+        )
+        $listemanquant= $listemanquant . " Pavé 'Date de détection' vide";
+
+        
+        if( $esr->getDateSurvenueESR() == null ||
+        $esr->getDateSurvenueESR() == ''
+        )
+        $listemanquant= $listemanquant . " Pavé 'Date de survenue' vide";
+        if($listemanquant==='')
+        {
+            $em=$this->getDoctrine()->getManager();
+            $etat=$em
+            ->getRepository('AppBundle\Entity\Etat')
+            ->findBy(
+                array('libelle' => 'Cloture')
+                )[0];
+            $esr->setEtat($etat);
+            $esr->setDateSauvegarde(new \DateTime('now'));
+            $esr->setUser($ConnectedUser = $this->get ('core.security' )->getUser());
+            $em->persist($esr);
+            $em->flush();
+            $response = new Response();
+            $response->setContent(json_encode([
+                'cloture' =>'true'
+            ]));
+            //Supprimer ESR de la session$
+            $this->closeCurrentPage();
+        }else
+        {
+            $response = new Response();
+            $response->setContent(json_encode([
+                'cloture' =>'false',
+                'listemanquant' =>$listemanquant
+            ]));
+        }
         $response->headers->set('Content-Type', 'application/json');
         
-        //Supprimer ESR de la session$
-        $this->closeCurrentPage();
+        
         //$response->send();
         return $response;
     }
@@ -576,6 +886,12 @@ class EsrController  extends Controller
     
     //Déclarant
     private function getimgDeclarant($idesr){
+    
+        return $this->render('EasyDoseBundle:portlet/Esr:desc_event_img.html.twig');
+    }    
+
+
+    private function getimgCategorie($idesr){
     
         return $this->render('EasyDoseBundle:portlet/Esr:desc_event_img.html.twig');
     }    
@@ -594,7 +910,24 @@ class EsrController  extends Controller
             'groupes' => $this->getDoctrine()->getManager()->getRepository('UserBundle\Entity\Group')->findAll()
         ]);
     }
-    
+    private function getDeclarantei($idesr){
+        
+        $this->get('userAction')->setCurrentEsrPage('getdeclarant');
+       
+        $this->setStep('$idesr','declarant');
+        return $this->render('EasyDoseBundle:portlet/Esr:declarant.html.twig',[
+            'urlimg'=>$this->generateUrl('getpageei',array('idesr'=>'0','typepage'=>'getimgevent2')),
+            'urlnext'=>$this->generateUrl('getpageei',array('idesr'=>'0','typepage'=>'getevent2')),
+            'idtemplateprecedent'=>'categorie',
+            'urlimgprece'=>$this->generateUrl('getpageei',array('idesr'=>'0','typepage'=>'getimgcategorie')),
+            'urlprece'=>$this->generateUrl('getpageei',array('idesr'=>'0','typepage'=>'getcategorie')),
+            'idtemplatenext' =>'event2',
+            'id_esr_courant' =>$this->getCurrentEsr()->getId(),
+            'esr' => $this->getCurrentEsr(),
+            'urlsaveesrvalue' => $this->generateUrl('saveesrvalue'),
+            'groupes' => $this->getDoctrine()->getManager()->getRepository('UserBundle\Entity\Group')->findAll()
+        ]);
+    }
     private function getCategorie($idesr){
         
         $this->get('userAction')->setCurrentEsrPage('getcategorie');
@@ -612,8 +945,8 @@ class EsrController  extends Controller
         ->find($currentsouscategorie->getCategorie()->getId());
 
         return $this->render('EasyDoseBundle:portlet/Esr:categorie.html.twig',[
-            'urlimg'=>$this->generateUrl('getpageesr',array('idesr'=>'0','typepage'=>'getimgevent1')),
-            'urlnext'=>$this->generateUrl('getpageesr',array('idesr'=>'0','typepage'=>'getDeclarant')),
+            'urlimg'=>$this->generateUrl('getpageei',array('idesr'=>'0','typepage'=>'getimgevent1')),
+            'urlnext'=>$this->generateUrl('getpageei',array('idesr'=>'0','typepage'=>'getdeclarant')),
             'idtemplatenext' =>'declarant',
             'id_esr_courant' =>$this->getCurrentEsr()->getId(),
             'esr' => $this->getCurrentEsr(),
@@ -836,6 +1169,19 @@ class EsrController  extends Controller
         return $this->render('EasyDoseBundle:portlet/Esr:souscategorie.html.twig',[
             'souscategories' => $souscategories,
             'esr' => $esr
+        ]);
+    }
+
+    function getAllEiSousCategorie2Action($categorieid){
+        $categorie=$this->getDoctrine()->getManager()
+        ->getRepository('AppBundle\Entity\Categorie')
+        ->find($categorieid);
+        $souscategories=$this->getDoctrine()->getManager()
+        ->getRepository('AppBundle\Entity\Souscategorie')
+        ->findBy(['categorie'=>$categorie]);
+
+        return $this->render('EasyDoseBundle:portlet/Esr:souscategorie2.html.twig',[
+            'souscategories' => $souscategories,
         ]);
     }
     public function savesouscategorieAction($esrid,$souscategorieid){
@@ -1143,23 +1489,24 @@ class EsrController  extends Controller
         $this->get('userAction')->setCurrentEsrPage('getevent2');
         $this->setStep('$idesr','event2');
         $esr=$this->getCurrentEsr();
+        $currentEtablissementei=($esr->getEtablissementeiid()==null)?0:$esr->getEtablissementeiid()->getId();
         if($esr->getPatient()!=null)
             $patient=$this->getDoctrine()->getManager()->find('AppBundle\Entity\Patient', $esr->getPatient()->getId());
         return $this->render('EasyDoseBundle:portlet/Esr:desc_eventei2.html.twig',[
             //next
-            'urlimg'=>$this->generateUrl('getpageesr',array('idesr'=>'0','typepage'=>'getimgconsequences')),
-            'urlnext'=>$this->generateUrl('getpageesr',array('idesr'=>'0','typepage'=>'getconsequences')),
+            'urlimg'=>$this->generateUrl('getpageei',array('idesr'=>'0','typepage'=>'getimgconsequences')),
+            'urlnext'=>$this->generateUrl('getpageei',array('idesr'=>'0','typepage'=>'getconsequences')),
             'idtemplatenext' =>'consequences',
             //pre
-            'urlimgprece'=>$this->generateUrl('getpageesr',array('idesr'=>'0','typepage'=>'getimgevent1')),
-            'urlprece'=>$this->generateUrl('getpageesr',array('idesr'=>'0','typepage'=>'getevent1')),
-            'idtemplateprecedent'=>'event1',
+            'urlimgprece'=>$this->generateUrl('getpageei',array('idesr'=>'0','typepage'=>'getimgdeclarant')),
+            'urlprece'=>$this->generateUrl('getpageei',array('idesr'=>'0','typepage'=>'getdeclarant')),
+            'idtemplateprecedent'=>'declarant',
             'id_esr_courant' =>$this->getCurrentEsr()->getId(),
             'esr' => $esr,
             'typepersonnevent' => $this->getDoctrine()->getManager()->getRepository('AppBundle\Entity\TypePersonnalEvent')->findAll(),
             'patient' => $patient,
             'allEtablissementei' => $this->getAllEtablissementei(),
-            'currentEtablissementei' => $esr->getEtablissementeiid()->getId(),
+            'currentEtablissementei' => $currentEtablissementei,
             'urlsaveesrvalue' => $this->generateUrl('saveesrvalue'),
             'origines' => $this->getDoctrine()->getManager()->getRepository('AppBundle\Entity\OrigineEsr')->findAll(),
             'dispositifs' =>  $this->getDoctrine()->getManager()->getRepository('AppBundle\Entity\Dispositif')->findAll(),
@@ -1194,6 +1541,24 @@ class EsrController  extends Controller
         ]);
     }
     
+
+    private function getConsequencesei($idesr){
+        $this->get('userAction')->setCurrentEsrPage('getconsequences');
+        $this->setStep('$idesr','consequences');
+        return $this->render('EasyDoseBundle:portlet/Esr:consequence.html.twig',[
+            //next
+            'urlimg'=>$this->generateUrl('getpageei',array('idesr'=>'0','typepage'=>'getimgmesures')),
+            'urlnext'=>$this->generateUrl('getpageei',array('idesr'=>'0','typepage'=>'getmesures')),
+            'idtemplatenext' =>'mesures',
+            //pre
+            'urlimgprece'=>$this->generateUrl('getpageei',array('idesr'=>'0','typepage'=>'getimgevent2')),
+            'urlprece'=>$this->generateUrl('getpageei',array('idesr'=>'0','typepage'=>'getevent2')),
+            'idtemplateprecedent'=>'event2',
+            'urlsaveesrvalue' => $this->generateUrl('saveesrvalue'),
+            'id_esr_courant' =>$this->getCurrentEsr()->getId(),
+            'esr' => $this->getCurrentEsr(),
+        ]);
+    }
     
     //mesures
     private function getimgMesures($idesr){
@@ -1220,7 +1585,23 @@ class EsrController  extends Controller
         ]);
     }
     
-    
+    private function getMesuresei($idesr){
+        $this->get('userAction')->setCurrentEsrPage('getmesures');
+        $this->setStep('$idesr','mesures');
+        return $this->render('EasyDoseBundle:portlet/Esr:mesures.html.twig',[
+            //next
+            'urlimg'=>$this->generateUrl('getpageei',array('idesr'=>'0','typepage'=>'getimgfin')),
+            'urlnext'=>$this->generateUrl('getpageei',array('idesr'=>'0','typepage'=>'getfin')),
+            'idtemplatenext' =>'fin',
+            //pre
+            'urlimgprece'=>$this->generateUrl('getpageei',array('idesr'=>'0','typepage'=>'getimgconsequences')),
+            'urlprece'=>$this->generateUrl('getpageei',array('idesr'=>'0','typepage'=>'getconsequences')),
+            'idtemplateprecedent'=>'consequences',
+            'urlsaveesrvalue' => $this->generateUrl('saveesrvalue'),
+            'id_esr_courant' =>$this->getCurrentEsr()->getId(),
+            'esr' => $this->getCurrentEsr(),
+        ]);
+    }
     
     
     //mesures
@@ -1236,6 +1617,18 @@ class EsrController  extends Controller
             [
                 'urlimgprece'=>$this->generateUrl('getpageesr',array('idesr'=>'0','typepage'=>'getimgmesures')),
                 'urlprece'=>$this->generateUrl('getpageesr',array('idesr'=>'0','typepage'=>'getmesures')),
+                'idtemplateprecedent' =>'mesures',
+            ]);
+        
+    }
+
+
+    private function getfinei($idesr){
+        $this->get('userAction')->setCurrentEsrPage('getfin');
+        return $this->render('EasyDoseBundle:portlet/Esr:fin.html.twig',
+            [
+                'urlimgprece'=>$this->generateUrl('getpageei',array('idesr'=>'0','typepage'=>'getimgmesures')),
+                'urlprece'=>$this->generateUrl('getpageei',array('idesr'=>'0','typepage'=>'getmesures')),
                 'idtemplateprecedent' =>'mesures',
             ]);
         

@@ -69,7 +69,12 @@ loadAutocompleteData:
 clotureesr:
   path: /clotureesr
   defaults: { _controller : EasyDoseBundle:Esr:clotureEsr}
-
+pagination:
+  path: /pagination/{nbpagesToview}/{offset}
+  defaults: { _controller : EasyDoseBundle:Esr:pagination}
+eiSearchFiltre:
+  path: /eiSearchFiltre/{screenheigth}/{offset}/{categorie}/{souscategorieslist}/{datedebut}/{datefin}
+  defaults: { _controller : EasyDoseBundle:Esr:eiSearchFiltre}
 esrsearchfiltre:
   path: /esrsearchfiltre/{screenheigth}/{offset}
   defaults: { _controller : EasyDoseBundle:Esr:esrSearchFiltre}
@@ -79,7 +84,9 @@ mesesr:
 mesei:
   path: /mesei/{screenheigth}/{offset}
   defaults: { _controller : EasyDoseBundle:Esr:mesei}
-
+meseisearch:
+  path: /meseisearch/{screenheigth}/{offset}/{categorie}/{souscategorieslist}/{datedebutf}/{datefinf}
+  defaults: { _controller : EasyDoseBundle:Esr:meseisearch, categorie: 0,souscategorieslist : '',datedebutf : null, datefinf : null}
 show_desc_dispositif:
   path: /show_desc_dispositif/{dispositif_id}
   defaults: { _controller : EasyDoseBundle:Esr:show_desc_dispositif}
@@ -120,6 +127,9 @@ getopeningesrpage:
 getAllEiSousCategorie:
   path: /getAllEiSousCategorie/{esrid}/{categorieid}
   defaults: { _controller : EasyDoseBundle:Esr:getAllEiSousCategorie, esrid: 0, categorieid: 0 }
+getAllEiSousCategorie2:
+  path: /getAllEiSousCategorie2/{categorieid}
+  defaults: { _controller : EasyDoseBundle:Esr:getAllEiSousCategorie2, categorieid: 0 }
 getcolorcategoriebyid:
   path: /getcolorcategoriebyid/{categorieid}
   defaults: { _controller : EasyDoseBundle:Esr:getcolorcategoriebyid, categorieid: 0 }
@@ -333,6 +343,9 @@ esr:
 ei:
   path: /ei/{screenheigth}
   defaults: { _controller : EasyDoseBundle:Esr:ei }   
+eisearch:
+  path: /eisearch/{screenheigth}/{categorie}/{souscategorieslist}/{datedebut}/{datefin}
+  defaults: { _controller : EasyDoseBundle:Esr:eisearch , souscategorieslist: null, categorie: 0, datedebut: null, datefin:null  }  
 worklistoffset:
   path: /worklistoffset/{offset}/{screenheigth}
   defaults: { _controller : EasyDoseBundle:Patient:worklistoffset }  

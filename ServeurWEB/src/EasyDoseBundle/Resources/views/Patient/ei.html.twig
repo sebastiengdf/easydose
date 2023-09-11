@@ -17,12 +17,15 @@
 	<div class="row">
 		
 		
-		<div class="col-sm-12 col-md-5" onclick="loadeipage();" data-toggle="modal" data-target="#md_delarationei" id="buttonei"> <p class="d-inline rounded ml-3 boxcliquable" style="font-size: 2em">{% if granted('app', 'esr', 'create') %} {% include ("@EasyDose/portlet/Esr/viewer/add.svg.twig") %} </p> <p class="d-inline boxcliquable"><strong>Nouvel évènement Indésirable</strong> </p>{% else %} <p>&nbsp;</p> {% endif %}</div> 
+		<div class="col-sm-12 col-md-2" onclick="loadeipage();" data-toggle="modal" data-target="#md_delarationei" id="buttonei"> 
+		<p class="d-inline rounded ml-3 boxcliquable" style="font-size: 2em">{% if granted('app', 'esr', 'create') %} {% include ("@EasyDose/portlet/Esr/viewer/add.svg.twig") %} </p> 
+		<p class="d-inline boxcliquable"><strong>Nouvel évènement Indésirable</strong> </p>
+		{% else %} <p>&nbsp;</p> {% endif %}
+		</div> 
 		
-		<div class="col-sm-12 col-md-2 d-none" data-toggle="modal" data-target="#md_delarationei" id="buttoneihidden"></div> 
-		<div class="col-sm-12 col-md-4" >{% include ("@EasyDose/portlet/classifier/rechercheei.html.twig")  with{'nbpagesToview':nbpagesToview,'offset':offset}%} 
-		<div class="col-sm-12 col-md-6" >{% include ("@EasyDose/portlet/classifier/pagination_esr.html.twig")  with{'nbpagesToview':nbpagesToview,'offset':offset}%} 
-	</div>
+		<div class="col-sm-12 col-md-3 d-none" data-toggle="modal" data-target="#md_delarationei" id="buttoneihidden"></div> 
+		<div class="col-sm-12 col-md-4" >{% include ("@EasyDose/portlet/classifier/rechercheei.html.twig")  with{'nbpagesToview':nbpagesToview,'offset':offset,'categories':categories}%} </div>
+		<div class="col-sm-12 col-md-4" id="pagination" >{% include ("@EasyDose/portlet/classifier/pagination_esr_ei.html.twig")  with{'nbpagesToview':nbpagesToview,'offset':offset}%} </div>
 	</div>
 	<div class="col-md-12"> &nbsp;</div>
     <div class="row  mx-1 overflow-auto h-50" id="eimesdelarations" >
@@ -77,7 +80,11 @@
 }
 
   function rechargerpageEI(){
-		url="{{ url('mesei',{"screenheigth": screenheigth,'offset':0} ) }}";
+		{% if issearch is defined and issearch %}
+  			$('#eimesdelarations').load("{{ url('meseisearch',{"screenheigth": screenheigth,'offset':offset,'datedebutf':datedebutf,'datefinf':datefinf,'categorie':categorie,'souscategorieslist':souscategorieslist} ) }}");
+		{% else %}
+			url="{{ url('mesei',{"screenheigth": screenheigth,'offset':0} ) }}";
+		{% endif %}
 		var url2=url.replace("_screenheigth", screen.height);
 		$('#eimesdelarations').load(url2);
 	}
@@ -108,8 +115,11 @@
   $('.mdb-select').materialSelect();
   $('#maincontent').loading('stop');
 
+{% if issearch is defined and issearch %}
+  $('#eimesdelarations').load("{{ url('meseisearch',{"screenheigth": screenheigth,'offset':offset,'datedebutf':datedebutf,'datefinf':datefinf,'categorie':categorie,'souscategorieslist':souscategorieslist} ) }}");
+{% else %}
   $('#eimesdelarations').load("{{ url('mesei',{"screenheigth": screenheigth,'offset':offset} ) }}");
-
+{% endif %}
   loadesr('image_esr','{{  url('getpageesr',{idesr:"0",typepage:"getimgdeclarant"}) }}');
   });
 

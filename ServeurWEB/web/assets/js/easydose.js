@@ -2,6 +2,7 @@
  * Liste des Objets
  * 
  */
+let souscategorieslist='';
 
 function EsrData(esr_id,valuename,value) {
 	  this.esr_id = esr_id;
@@ -779,6 +780,112 @@ function getNotes2(idpatient,urlpatient2) {
 	   $('#moinsNworklist'+idpatient).css('display', 'block');
 	
 }  
+
+
+function thisoneei(offset,url){
+
+
+	datedebut=$("#rechercherchedatedebut").val()
+	if(datedebut != '')
+	{
+		var date=new Date(datedebut);
+		day=date.getDate() 
+		month=date.getMonth()
+		month=((month+1)+'').padStart(2,'0')
+		day=((day)+'').padStart(2,'0')
+		var strdate=day +'-'+month+'-'+date.getFullYear();  
+	}else
+		var strdate='-'
+
+
+datefin=$("#rechercherchedatefin").val()
+if(datefin != '')
+{
+	var date2=new Date(datefin);
+	day2=date2.getDate() 
+	month2=date2.getMonth()
+	month2=((month2+1)+'').padStart(2,'0')
+	day2=((day2)+'').padStart(2,'0')
+	var strdate2=day2 +'-'+month2+'-'+date2.getFullYear();  
+}else
+	var strdate2='-'
+
+    url2=url.split('+')[0].replace("numoffset", (offset)).replace("_screenheigth", screen.height).replace("_categorie" , "_").replace("_souscategorieslist",souscategorieslist).replace("_datedebutf",strdate).replace("_datefinf",strdate2);
+   $('#eimesdelarations').load(url2);
+
+   $('#pagination').load(url.split('+')[1].replace("numoffset", (offset)).replace("_screenheigth", screen.height));
+}
+
+function lastei(offset,url){
+	   
+	datedebut=$("#rechercherchedatedebut").val()
+	if(datedebut != '')
+	{
+		var date=new Date(datedebut);
+		day=date.getDate() 
+		month=date.getMonth()
+		month=((month+1)+'').padStart(2,'0')
+		day=((day)+'').padStart(2,'0')
+		var strdate=day +'-'+month+'-'+date.getFullYear();  
+	}else
+		var strdate='-'
+
+
+datefin=$("#rechercherchedatefin").val()
+if(datefin != '')
+{
+	var date2=new Date(datefin);
+	day2=date2.getDate() 
+	month2=date2.getMonth()
+	month2=((month2+1)+'').padStart(2,'0')
+	day2=((day2)+'').padStart(2,'0')
+	var strdate2=day2 +'-'+month2+'-'+date2.getFullYear();  
+}else
+	var strdate2='-'
+
+	    url2=url.split('+')[0].replace("numoffset", (offset-1)).replace("_screenheigth", screen.height).replace("_categorie" , "_").replace("_souscategorieslist",souscategorieslist).replace("_datedebutf",strdate).replace("_datefinf",strdate2);
+	    
+	   $('#eimesdelarations').load(url2);
+
+	   $('#pagination').load(url.split('+')[1].replace("numoffset", (offset-1)).replace("_screenheigth", screen.height));
+  }
+
+   
+function nextei(offset,url){
+		
+	datedebut=$("#rechercherchedatedebut").val()
+	if(datedebut != '')
+	{
+		var date=new Date(datedebut);
+		day=date.getDate() 
+		month=date.getMonth()
+		month=((month+1)+'').padStart(2,'0')
+		day=((day)+'').padStart(2,'0')
+		var strdate=day +'-'+month+'-'+date.getFullYear();  
+	}else
+		var strdate='-'
+
+
+datefin=$("#rechercherchedatefin").val()
+if(datefin != '')
+{
+	var date2=new Date(datefin);
+	day2=date2.getDate() 
+	month2=date2.getMonth()
+	month2=((month2+1)+'').padStart(2,'0')
+	day2=((day2)+'').padStart(2,'0')
+	var strdate2=day2 +'-'+month2+'-'+date2.getFullYear();  
+}else
+	var strdate2='-'
+	
+	url2=url.split('+')[0].replace("numoffset",(offset+1)).replace("_screenheigth", screen.height).replace("_categorie" , "_").replace("_souscategorieslist",souscategorieslist).replace("_datedebutf",strdate).replace("_datefinf",strdate2);	
+		$('#eimesdelarations').load(url2);
+
+		//url3=
+
+		$('#pagination').load(url.split('+')[1].replace("numoffset",(offset+1)).replace("_screenheigth", screen.height));
+}
+
 
 function thisone(offset,url){
     url2=url.replace("numoffset", (offset)).replace("_screenheigth", screen.height);

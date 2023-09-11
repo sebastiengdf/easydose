@@ -187,6 +187,16 @@ class Esr
      */
     private $dateSauvegarde;
     
+
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="datedecla", type="datetime", nullable=true)
+     */
+    private $datedecla;
+
+
     /**
      * @ORM\ManyToOne(targetEntity="UserBundle\Entity\User")
      * @ORM\JoinColumn(name="createur", referencedColumnName="id")
@@ -803,6 +813,24 @@ class Esr
 	 */
 	public function setEtablissementeiid($etablissementeiid): self {
 		$this->etablissementeiid = $etablissementeiid;
+		return $this;
+	}
+
+	/**
+	 * 
+	 * @return \DateTime
+	 */
+	public function getDatedecla() {
+		return $this->datedecla;
+	}
+	
+	/**
+	 * 
+	 * @param \DateTime $datedecla 
+	 * @return self
+	 */
+	public function setDatedecla($datedecla): self {
+		$this->datedecla = $datedecla;
 		return $this;
 	}
 }

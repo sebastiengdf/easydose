@@ -4,6 +4,44 @@
                     
                         <p class="h4 mb-4 text-center">Description de l'évènement</p>     
                         
+                        <div class="form-row mb-4">
+                            <div class="col">
+                                <!-- First name -->
+                                <input type="text" id="dateSurvenueESR" class="form-control" placeholder="Choisissez la date" value="{{ esr.dateSurvenueESR }}">
+                            </div>
+                             
+                        
+                            <div class="col">
+                                <!-- Last name -->
+                                <input type="text" id="heureSurvenueESR" class="form-control" placeholder="Choisissez l'heure" value="{{ esr.heureSurvenueESR }}">
+                            </div>
+                        </div>
+                        <div class="text-center">
+                        <small id="defaultRegisterFormPasswordHelpBlock" class="form-text text-muted mb-4">
+                              Date de survenue.
+                        </small>
+                        </div>
+                        <!-- Date de détection --> 
+                        
+                        
+                        <div class="form-row mb-4">
+                            <div class="col">
+                                <!-- First name -->
+                                <input type="text" id="dateDetectionESR" class="form-control" placeholder="Choisissez la date" value="{{ esr.dateDetectionESR }}">
+                            </div>
+                            <div class="col">
+                                <!-- Last name -->
+                                <input type="text" id="heureDetectionESR" class="form-control" placeholder="Choisissez l'heure" value="{{ esr.heureDetectionESR }}">
+                            </div>
+                        </div>
+    
+						<div class="text-center">    
+                         <small id="defaultRegisterFormPasswordHelpBlock" class="form-text text-muted mb-4">
+                              Date de détection.
+                         </small>              	
+                     	</div>
+
+
                      	<!-- Circonstances de détection -->
                      	<p  class="text-center  mb-3 mt-3" style="border-bottom:1px solid #ced4da;">                     	
                         <strong>4.</strong>
@@ -51,21 +89,10 @@
                         {% endif %}
                     
                     
-                    
-                        <!-- Dispositif concerné -->
-                    	<p class="text-center  mb-3 mt-3" style="border-bottom:1px solid #ced4da;">
-                        <strong>5.</strong>
-                        Dispositif concerné
-                        </p> 
-    					
-    					<input type="text" id="dispositif_visible" value="{{ dispositifCourant.marque }} {{ dispositifCourant.denomination}}" class="form-control mb-4" placeholder="Choisissez le dispositif" data-toggle="modal" data-target="#listedispositifs">
-                        
-                        <input type="hidden" id="dispositif" >
-                        
-                        
+                                            
                         <!-- Etablissement concerné -->
                     	<p class="text-center  mb-3 mt-3" style="border-bottom:1px solid #ced4da;">
-                        <strong>6.</strong>
+                        <strong>5.</strong>
                         Etablissement concerné
                         </p> 
                         <select id="etablissementei" class="browser-default custom-select mb-4">
@@ -80,6 +107,19 @@
                             {% endfor %}
                                                       
                         </select>
+
+                    
+                        <!-- Dispositif concerné -->
+                    	<p class="text-center  mb-3 mt-3" style="border-bottom:1px solid #ced4da;">
+                        <strong>6.</strong>
+                        Dispositif concerné
+                        </p> 
+    					
+    					<input type="text" id="dispositif_visible" value="{{ dispositifCourant.marque }} {{ dispositifCourant.denomination}}" class="form-control mb-4" placeholder="Choisissez le dispositif" data-toggle="modal" data-target="#listedispositifs">
+                        
+                        <input type="hidden" id="dispositif" >
+                        
+
 
                           
                         <!-- Orignine de l'évènement -->
@@ -117,6 +157,47 @@
 
         changeesrValueGlobal('{{urlsaveesrvalue}}',{{id_esr_courant}},'select','esreventpersonnel');
 
+
+        changeesrValueGlobal('{{urlsaveesrvalue}}',{{id_esr_courant}},'select','idCritereDeclaration');
+ 		changeesrValueGlobal('{{urlsaveesrvalue}}',{{id_esr_courant}},'input','heureSurvenueESR');
+ 		changeesrValueGlobal('{{urlsaveesrvalue}}',{{id_esr_courant}},'input','heureDetectionESR');
+ 		lierInput('critere{{ esr.id }}','selecttext','idCritereDeclaration');
+       
+        	// Data Picker Initialization
+		$('#dateSurvenueESR').pickadate({
+			 monthsFull: ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Aout', 'Septembre', 'Octobre',
+					'Novembre', 'Decembre'],
+					// Light or Dark theme
+		        	darktheme: true,
+		        	onSet: function(context) {		        			
+							date=new Date(context.select)
+                            day=date.getDate() 
+                            month=date.getMonth()
+                            month=((month+1)+'').padStart(2,'0')
+                            day=((day)+'').padStart(2,'0')
+							var strdate=date.getDate() +' '+convertMonthToFranch(date.getMonth())+', '+date.getFullYear();
+                            var strdate2=day +'/'+month+'/'+date.getFullYear();
+							changeValueEsr('{{urlsaveesrvalue}}',{{id_esr_courant}},'dateSurvenueESR',strdate);
+                            console.log(strdate2);
+                            changeValueEsr('{{urlsaveesrvalue}}',{{id_esr_courant}},'datedecla',strdate2);
+							changetextindiv('dateesr{{ esr.id }}',strdate);
+		        			}
+			}	);
+
+
+        	// Data Picker Initialization
+		$('#dateDetectionESR').pickadate({
+			 monthsFull: ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Aout', 'Septembre', 'Octobre',
+					'Novembre', 'Decembre'],
+					// Light or Dark theme
+		        	darktheme: true,
+		        	onSet: function(context) {		        			
+						date=new Date(context.select)
+						var strdate=date.getDate() +' '+convertMonthToFranch(date.getMonth())+', '+date.getFullYear();
+						changeValueEsr('{{urlsaveesrvalue}}',{{id_esr_courant}},'dateDetectionESR',strdate);
+	        		
+	        			}
+			}	);
 
         function deletepatientesr(esrid,url){       	 
       	 url2=url.replace('_esrid',esrid);

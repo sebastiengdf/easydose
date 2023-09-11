@@ -2,30 +2,7 @@
 			<div  id="identitiedeclarant">
                     <form class="border border-light p-3" action="#!">
 						<p class="h4 mb-1 text-center">Conséquences sur les personnes concernées</p>
-					    <div class="form-row mb-1">
-                            <div class="col">
-                                <!-- First name -->
-                                <input type="text" id="agePersonneConserne" class="form-control" placeholder="Age de la personne" value="{{ esr.agePersonneConserne }}">
-                            </div>
-                            
-                        </div>
-
-                        <div class="form-row  custom-control custom-checkbox  mb-1">
-                            <div class="col d-inline mr-4">
-                                <!-- Homme-->
-                                <input type="checkbox" class="custom-control-input " id="homme" {% if esr.sex =="HOMME" %} checked="checked" {% endif %}>
-        					    <label class="custom-control-label" for="homme">Homme</label> 
-                            </div>
-                            <div class="col d-inline">
-                                <!-- Femme -->
-                                <input type="checkbox" class="custom-control-input" id="femme" {% if esr.sex =="FEMME" %} checked="checked" {% endif %}>
-        						<label class="custom-control-label" for="femme">Femme</label>
-                            </div>
-                            
-                           
-                        </div>
-                        
-                        
+                  
 
                      	<p  class="text-center  mb-1 mt-1" style="border-bottom:1px solid #ced4da;">                     	
                         <strong>4.</strong>
@@ -38,7 +15,7 @@
  
  
                       	<p  class="text-center  mb-1 mt-1" style="border-bottom:1px solid #ced4da;">                     	
-                        <strong>4.</strong>
+                        <strong>5.</strong>
                         Conséquences potentielles (réalistes)
                         </p>  
                      	<div class="form-group">

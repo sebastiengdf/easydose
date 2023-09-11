@@ -2,7 +2,14 @@
 -->
 
 <div>
-    <div class="card weather-card mb-4 mt-4 mr-2 ml-2 content2" {% block stylecard %}  {% endblock %}>
+    {% if isesr is defined and isesr %}
+        {% set left='ml-2'%}
+    {% else %}
+         {% set left='ml-4'%}
+    {% endif %}
+
+    <div class="card weather-card mb-4 mt-4 mr-2 {{left}} content2" {% block stylecard %}  {% endblock %}>   
+  
     {%  block content %}
     
     {% endblock %}

@@ -53,9 +53,15 @@
                			<div class="col-lg-5">
                				<strong>Déclarant:</strong>
                			</div>
-               			<div class="col-lg-7 pl-0 pr-0">               				
+               			<div class="col-lg-7 pl-0 pr-0"> 
+						{% if ConnectedUser==esr.user or ConnectedUser.issuperadmin() %}              				
                				<div id="divnomd{{ esr.id }}">{{ esr.nomDeclarant }}</div>
                				<div id="divprenomd{{ esr.id }}"> {{ esr.prenomDeclarant }}</div>
+						{% else %}
+							<div id="divnomd{{ esr.id }}">***************</div>
+               				<div id="divprenomd{{ esr.id }}">***************</div>
+
+						{% endif %}
                			</div>
                   	</div>
               		
@@ -122,10 +128,15 @@
            {% if isesr %}
 		   	<div class="col-lg-6 boxcliquable" onclick="modifiEsrPage({{ esr.id }});">
 		   {% else %}
+		   {% if ConnectedUser==esr.user or ConnectedUser.issuperadmin() %}   
 		   	<div class="col-lg-6 boxcliquable" onclick="modifiEiPage({{ esr.id }});">
 		   {% endif %}
+		   {% endif %}
+		   {% if ConnectedUser==esr.user or ConnectedUser.issuperadmin() %}              				
+               			
            		{% include ("@EasyDose/portlet/Esr/pencil.svg.twig") %} Modifier
-           </div>
+           {% endif %}
+		   </div>
            {% endif %}
        </div>
      
