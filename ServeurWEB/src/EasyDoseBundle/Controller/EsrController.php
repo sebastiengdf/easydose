@@ -820,32 +820,39 @@ class EsrController  extends Controller
         //Vérification esr
         if ($esr->getConsequencepotentielle() ==null ||
         $esr->getConsequencepotentielle() == '' )
-            $listemanquant= $listemanquant . " Pavé 'Conséquences potentielles' vide";
+            $listemanquant= $listemanquant . " Pavé 'Conséquences potentielles' vide <br />";
+            
+        if ($esr->getNomDeclarant() ==null || $esr->getNomDeclarant() == '' )
+                $listemanquant= $listemanquant . " Pavé 'Nom du déclarant' vide <br />";
+        
+        if ($esr->getPrenomDeclarant() ==null || $esr->getPrenomDeclarant() == '' )
+            $listemanquant= $listemanquant . " Pavé 'Prénom du déclarant' vide <br />";
+
        if( $esr->getConsequencereelleim()  == null ||
         $esr->getConsequencereelleim() == ''
         )
-        $listemanquant= $listemanquant . " Pavé 'Conséquences immédiates' vide";
+        $listemanquant= $listemanquant . " Pavé 'Conséquences immédiates' vide <br />";
 
         if( $esr->getActionconservatoires()  == null ||
         $esr->getActionconservatoires() == ''
         )
-        $listemanquant= $listemanquant . " Pavé 'Actions conservatoires' vide";
+        $listemanquant= $listemanquant . " Pavé 'Actions conservatoires' vide <br />";
 
         if( $esr->getActioncorrectives() == null ||
         $esr->getActioncorrectives() == ''
         )
-        $listemanquant= $listemanquant . " Pavé 'Actions correctives' vide";
+        $listemanquant= $listemanquant . " Pavé 'Actions correctives' vide <br />";
 
         if( $esr->getDateDetectionESR() == null ||
         $esr->getDateDetectionESR() == ''
         )
-        $listemanquant= $listemanquant . " Pavé 'Date de détection' vide";
+        $listemanquant= $listemanquant . " Pavé 'Date de détection' vide <br />";
 
         
         if( $esr->getDateSurvenueESR() == null ||
         $esr->getDateSurvenueESR() == ''
         )
-        $listemanquant= $listemanquant . " Pavé 'Date de survenue' vide";
+        $listemanquant= $listemanquant . " Pavé 'Date de survenue' vide <br />";
         if($listemanquant==='')
         {
             $em=$this->getDoctrine()->getManager();
@@ -925,6 +932,7 @@ class EsrController  extends Controller
             'id_esr_courant' =>$this->getCurrentEsr()->getId(),
             'esr' => $this->getCurrentEsr(),
             'urlsaveesrvalue' => $this->generateUrl('saveesrvalue'),
+            'isei' => true,
             'groupes' => $this->getDoctrine()->getManager()->getRepository('UserBundle\Entity\Group')->findAll()
         ]);
     }

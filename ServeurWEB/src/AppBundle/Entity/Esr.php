@@ -165,6 +165,14 @@ class Esr
      */
     private $consequencepotentielle;
     
+    
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="groupei", type="string", length=1024, nullable=true)
+     */
+    private $groupei;
+
     /**
      * @var string
      *
@@ -831,6 +839,24 @@ class Esr
 	 */
 	public function setDatedecla($datedecla): self {
 		$this->datedecla = $datedecla;
+		return $this;
+	}
+
+	/**
+	 * 
+	 * @return string
+	 */
+	public function getGroupei() {
+		return $this->groupei;
+	}
+	
+	/**
+	 * 
+	 * @param string $groupei 
+	 * @return self
+	 */
+	public function setGroupei($groupei): self {
+		$this->groupei = $groupei;
 		return $this;
 	}
 }
