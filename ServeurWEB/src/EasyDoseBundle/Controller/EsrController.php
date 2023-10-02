@@ -768,6 +768,7 @@ class EsrController  extends Controller
             'esr'=>$esr,
             'dispositif'=>$dispositif,
             'origine'=>$origine,
+            'isei'=>'true',
             'groupes' =>$this->getDoctrine()->getManager()->getRepository('UserBundle\Entity\Group')->findAll(),
             'resp_nom' =>$em->getRepository('AppBundle\Entity\Parametre')->findBy( array('nom' => 'esr_resp_activite_nom'))[0]->getValeur(),
             'resp_prenom' =>$em->getRepository('AppBundle\Entity\Parametre')->findBy( array('nom' => 'esr_resp_activite_prenom'))[0]->getValeur(),

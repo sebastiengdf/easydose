@@ -1,22 +1,27 @@
 {% extends "@EasyDose/portlet/Esr/viewer/template.html.twig" %}
 
 {% block entete %}
- COMPTE-RENDU D’ÉVÉNEMENT SIGNIFICATIF<br>
-DANS LE DOMAINE DE LA RADIOPROTECTION<br>
+{% if isei is defined %}
+    COMPTE-RENDU D’ÉVÉNEMENT INDESIRABLES
+ {% else %}
+    COMPTE-RENDU D’ÉVÉNEMENT SIGNIFICATIF<br>
+    DANS LE DOMAINE DE LA RADIOPROTECTION<br>
 
-(hors événement intéressant un patient soumis à une exposition en radiothérapie)
+    (hors événement intéressant un patient soumis à une exposition en radiothérapie)
+{% endif %}
 {% endblock %}
 
 
 
-
 {% block apparte %}
+    {% if isei is defined %}
 
-Le « compte-rendu d’événement significatif » est à adresser à l’Autorité de sûreté nucléaire dans les 2 mois suivant la déclaration de l’événement significatif en radioprotection. Il intègre une analyse détaillée de l’événement et l’exposé des mesures correctives mises en œuvre ou envisagées.
+    {% else %}
+        Le « compte-rendu d’événement significatif » est à adresser à l’Autorité de sûreté nucléaire dans les 2 mois suivant la déclaration de l’événement significatif en radioprotection. Il intègre une analyse détaillée de l’événement et l’exposé des mesures correctives mises en œuvre ou envisagées.
 
-Pour un événement significatif de radioprotection patient en radiothérapie (critère 2.1), merci de vous référer au modèle
-CRES/MED/RT disponible sur http://professionnels.asn.fr.
-
+        Pour un événement significatif de radioprotection patient en radiothérapie (critère 2.1), merci de vous référer au modèle
+        CRES/MED/RT disponible sur http://professionnels.asn.fr.
+    {% endif %}
 {% endblock %}
 
 
@@ -26,8 +31,14 @@ I. Renseignement sur le déclarant
 {% block titledeclarant %}Declarant{% endblock %}
 {% block circonstancesdetection %}Circonstances de la détection{% endblock %}
 {% block descriptioncirconstances %} {{ esr.circonstancesDetection }} {% endblock %} 
-{% block nomdeclarant %} {{ esr.nomDeclarant }}{% endblock %}
-{% block prenomnomdeclarant %} {{ esr.prenomDeclarant }}{% endblock %}
+{% if ConnectedUser==esr.user or ConnectedUser.issuperadmin() %}  
+    {% block nomdeclarant %} {{ esr.nomDeclarant }}{% endblock %}
+    {% block prenomnomdeclarant %} {{ esr.prenomDeclarant }}{% endblock %}
+{% else %}
+	{% block nomdeclarant %}***************{% endblock %}
+    {% block prenomnomdeclarant %} ***************{% endblock %}
+
+{% endif %}
 {% block fonctiondeclarant %} 
 
 
@@ -40,8 +51,13 @@ I. Renseignement sur le déclarant
 
 
 {% endblock %}
-{% block emaildeclarant %} {{ esr.emailDeclarant }} {% endblock %}
-{% block phonedeclarant %} {{ esr.telephoneDeclarant}} {% endblock %}
+{% if ConnectedUser==esr.user or ConnectedUser.issuperadmin() %}  
+    {% block emaildeclarant %} {{ esr.emailDeclarant }} {% endblock %}
+    {% block phonedeclarant %} {{ esr.telephoneDeclarant}} {% endblock %}
+{% else %}
+    {% block emaildeclarant %} *************** {% endblock %}
+    {% block phonedeclarant %} *************** {% endblock %}
+{% endif %}
 
 {% block titleetablissement %}Identification de l'installation{% endblock %}
 {% block raisonsocialetablissement %} {{  esr.etablissement.nom }}{% endblock %}
