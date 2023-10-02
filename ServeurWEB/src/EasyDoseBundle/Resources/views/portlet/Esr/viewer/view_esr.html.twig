@@ -31,14 +31,23 @@ I. Renseignement sur le déclarant
 {% block titledeclarant %}Declarant{% endblock %}
 {% block circonstancesdetection %}Circonstances de la détection{% endblock %}
 {% block descriptioncirconstances %} {{ esr.circonstancesDetection }} {% endblock %} 
-{% if ConnectedUser==esr.user or ConnectedUser.issuperadmin() %}  
-    {% block nomdeclarant %} {{ esr.nomDeclarant }}{% endblock %}
-    {% block prenomnomdeclarant %} {{ esr.prenomDeclarant }}{% endblock %}
-{% else %}
-	{% block nomdeclarant %}***************{% endblock %}
-    {% block prenomnomdeclarant %} ***************{% endblock %}
 
-{% endif %}
+    {% block nomdeclarant %} 
+        {% if ConnectedUser==esr.user or ConnectedUser.issuperadmin() %}  
+            {{ esr.nomDeclarant }}
+        {% else %}
+            ***************
+        {% endif %}
+    {% endblock %}
+    
+    {% block prenomnomdeclarant %} 
+    {% if ConnectedUser==esr.user or ConnectedUser.issuperadmin() %}      
+        {{ esr.prenomDeclarant }}
+    {% else %}
+            ***************
+    {% endif %}
+    {% endblock %}
+
 {% block fonctiondeclarant %} 
 
 
@@ -51,13 +60,22 @@ I. Renseignement sur le déclarant
 
 
 {% endblock %}
-{% if ConnectedUser==esr.user or ConnectedUser.issuperadmin() %}  
-    {% block emaildeclarant %} {{ esr.emailDeclarant }} {% endblock %}
-    {% block phonedeclarant %} {{ esr.telephoneDeclarant}} {% endblock %}
-{% else %}
-    {% block emaildeclarant %} *************** {% endblock %}
-    {% block phonedeclarant %} *************** {% endblock %}
-{% endif %}
+ 
+    {% block emaildeclarant %}
+        {% if ConnectedUser==esr.user or ConnectedUser.issuperadmin() %}  
+            {{ esr.emailDeclarant }} 
+        {% else %}
+            *************** 
+        {% endif %}
+    {% endblock %}
+    {% block phonedeclarant %}
+        {% if ConnectedUser==esr.user or ConnectedUser.issuperadmin() %} 
+            {   { esr.telephoneDeclarant}}
+        {% else %}
+            *************** 
+        {% endif %}
+    {% endblock %}
+
 
 {% block titleetablissement %}Identification de l'installation{% endblock %}
 {% block raisonsocialetablissement %} {{  esr.etablissement.nom }}{% endblock %}
