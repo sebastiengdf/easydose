@@ -2,7 +2,7 @@
 
 {% block entete %}
 {% if isei is defined %}
-    COMPTE-RENDU D’ÉVÉNEMENT INDESIRABLES
+    COMPTE-RENDU D’ÉVÉNEMENT INDESIRABLE
  {% else %}
     COMPTE-RENDU D’ÉVÉNEMENT SIGNIFICATIF<br>
     DANS LE DOMAINE DE LA RADIOPROTECTION<br>
@@ -70,7 +70,7 @@ I. Renseignement sur le déclarant
     {% endblock %}
     {% block phonedeclarant %}
         {% if ConnectedUser==esr.user or ConnectedUser.issuperadmin() %} 
-            {   { esr.telephoneDeclarant}}
+            {{ esr.telephoneDeclarant}}
         {% else %}
             *************** 
         {% endif %}

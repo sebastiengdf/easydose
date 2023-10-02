@@ -738,6 +738,7 @@ class EsrController  extends Controller
         ]);
     }
     public function viewEsrAction($esrid){
+        $ConnectedUser = $this->get ( 'core.security' )->getUser ();
         $em=$this->getDoctrine()
         ->getManager();
         $esr=$em->find('AppBundle\Entity\Esr', $esrid);
@@ -749,6 +750,7 @@ class EsrController  extends Controller
             'esr'=>$esr,
             'dispositif'=>$dispositif,
             'origine'=>$origine,
+            'ConnectedUser'=>$ConnectedUser,
             'groupes' =>$this->getDoctrine()->getManager()->getRepository('UserBundle\Entity\Group')->findAll(),
             'resp_nom' =>$em->getRepository('AppBundle\Entity\Parametre')->findBy( array('nom' => 'esr_resp_activite_nom'))[0]->getValeur(),
             'resp_prenom' =>$em->getRepository('AppBundle\Entity\Parametre')->findBy( array('nom' => 'esr_resp_activite_prenom'))[0]->getValeur(),
@@ -757,6 +759,7 @@ class EsrController  extends Controller
     }
     
     public function viewEiAction($esrid){
+        $ConnectedUser = $this->get ( 'core.security' )->getUser ();
         $em=$this->getDoctrine()
         ->getManager();
         $esr=$em->find('AppBundle\Entity\Esr', $esrid);
@@ -769,6 +772,7 @@ class EsrController  extends Controller
             'dispositif'=>$dispositif,
             'origine'=>$origine,
             'isei'=>'true',
+            'ConnectedUser'=>$ConnectedUser,
             'groupes' =>$this->getDoctrine()->getManager()->getRepository('UserBundle\Entity\Group')->findAll(),
             'resp_nom' =>$em->getRepository('AppBundle\Entity\Parametre')->findBy( array('nom' => 'esr_resp_activite_nom'))[0]->getValeur(),
             'resp_prenom' =>$em->getRepository('AppBundle\Entity\Parametre')->findBy( array('nom' => 'esr_resp_activite_prenom'))[0]->getValeur(),
