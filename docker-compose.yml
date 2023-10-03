@@ -40,7 +40,7 @@ services:
       context: .
       dockerfile: dicomserverDockerFile
     container_name: "dicomserver"
-    image: dicomserver:latest
+    image: dicomserver:0.2
     restart: unless-stopped
     tty: true
     hostname: dicomserver
@@ -60,7 +60,7 @@ services:
       context: .
       dockerfile: sshserverDockerfile
     container_name: "sshserver"
-    image: sshserver:latest
+    image: sshserver:0.2
     restart: unless-stopped
     tty: true
     hostname: sshserver

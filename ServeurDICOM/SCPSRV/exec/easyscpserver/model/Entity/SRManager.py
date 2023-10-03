@@ -352,7 +352,7 @@ class SRManager(DICOMDbManager):
                                         protocoleall =   _protocole 
                                 if '2' in _unite:
                                     myPatient.haveradio
-                                else
+                                else:
                                     myPatient.havescanner=1
                                 DetailDose(uniteseuil=" ",nrdvaleur=0,sumhavealerte=0,nrdhavealerte=0,unitexrayTubeContent=_xraytubecourrantuynite,modalite=self.manageDCMData.modalite,date=self.manageDCMData.dateexamen,machine=_machine,unite=_unite,protocole=_protocole.encode('utf-8').decode('utf-8'),body_part_easydose=easydosebodyparts,valeur=float(self._valeur),kvp=float(self._kvp), tempsExposition=float(self._tempsexposition), xrayTubeContent=int(self._xraytubecourrant), dose=myDose, bodyPart=self._region)
             myDose.protocole=protocoleall.encode('utf-8').decode('utf-8')
