@@ -124,21 +124,21 @@ class Patient
 	 /**
      * @var boolean
      *
-     * @ORM\Column(name="havemammo", type="boolean")
+     * @ORM\Column(name="havemammo", type="boolean", nullable=true)
      */
     private $havemammo;
     
     /**
      * @var boolean
      *
-     * @ORM\Column(name="haveradio", type="boolean")
+     * @ORM\Column(name="haveradio", type="boolean", nullable=true)
      */
     private $haveradio;
 
     /**
      * @var boolean
      *
-     * @ORM\Column(name="havescanner", type="boolean")
+     * @ORM\Column(name="havescanner", type="boolean", nullable=true)
      */
     private $havescanner;
 
