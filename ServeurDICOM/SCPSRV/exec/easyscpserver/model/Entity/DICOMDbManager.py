@@ -50,6 +50,7 @@ class DICOMDbManager(object):
         if patientpresent and PatientOld:
             myPatient=PatientOld; # on est sur le bon patient
             self.loggin.warning('Patient trouve !!!')
+            myPatient.datelastexam=date.today() 
         else: 
             self.loggin.warning('Nouveau Patient => insertion')                  
             myPatient = Patient(datelastexam=date.today(),havescanner=0,haveradio=0,havemammo=0,havenotes=0,nbdoses=0,sumhavealerte=0,nrdhavealerte=0,idregional="_",sex=self.manageDCMData.sex,uniteage=self.manageDCMData.unitageage,prenom=self.manageDCMData.patientprenom.encode('utf-8').decode('utf-8'), nom=self.manageDCMData.patientname.encode('utf-8').decode('utf-8'), numipp=self.manageDCMData.patientnumipp, datenaissance=self.manageDCMData.patientdatedenaissance, age=int(self.manageDCMData.patientage))
